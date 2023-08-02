@@ -1,0 +1,190 @@
+// Basic demo for accelerometer readings from Adafruit MPU6050
+
+// ESP32 Guide: https://RandomNerdTutorials.com/esp32-mpu-6050-accelerometer-gyroscope-arduino/
+// ESP8266 Guide: https://RandomNerdTutorials.com/esp8266-nodemcu-mpu-6050-accelerometer-gyroscope-arduino/
+// Arduino Guide: https://RandomNerdTutorials.com/arduino-mpu-6050-accelerometer-gyroscope/
+
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
+#include <Wire.h>
+
+#include <U8g2lib.h>
+#ifdef U8X8_HAVE_HW_SPI
+#include <SPI.h>
+#endif
+/* Not needed, since included up above */
+/* #ifdef U8X8_HAVE_HW_I2C */
+/* #include <Wire.h> */
+/* #endif */
+
+#include "lcd_screen.h"
+
+Adafruit_MPU6050 mpu;
+
+#define I2C_SDA 23
+#define I2C_SCL 19
+
+/*
+  0: no debugging
+  1: some debugging
+  2; more debugging
+ */
+#define DEBUG 1
+
+#define TOUCH_PIN 4
+#define TOUCH_THRESHOLD 40
+
+sensors_event_t a, g, temp;
+float touch;
+
+float last_5_x[5];
+float last_5_y[5];
+float last_5_z[5];
+
+int64_t last_time = 0;
+
+
+/* Waiting for touch to be triggered */
+#define STATE_WAITING 0
+/* Touch triggered; waiting for accel shock */
+#define STATE_TIMER_START 1
+/* Accel shock happened; end timer.
+   Note: I don't know that I need this...I think I can just go
+   back to STATE_WAITING.
+*/
+#define STATE_TIMER_ENDED 2
+/* After that: go to STATE_WAITING */
+
+int state = STATE_WAITING;
+
+#define THRESHOLD_PERCENTAGE 5
+
+void setup(void) {
+  Serial.begin(115200);
+  while (!Serial)
+    delay(10); // will pause Zero, Leonardo, etc until serial console opens
+
+  Serial.println("Adafruit MPU6050 test!");
+  Wire.begin(I2C_SDA, I2C_SCL);
+
+  // Try to initialize!
+  if (!mpu.begin()) {
+    Serial.println("Failed to find MPU6050 chip");
+    while (1) {
+      delay(10);
+    }
+  }
+  Serial.println("MPU6050 Found!");
+
+  mpuSetup();
+
+  Serial.println("");
+  // u8g2 stuff
+  Serial.println("Initializing screen...");
+  u8g2.begin();
+  u8g2_prepare();
+  u8g2.enableUTF8Print();
+  u8g2.setContrast(70);
+  u8g2.clearBuffer();
+  u8g2.setCursor(0, 0);
+  u8g2.print("Tree Tomography!");
+
+  Serial.println();
+
+  delay(100);
+  touchAttachInterrupt(T0, TouchISR, TOUCH_THRESHOLD);
+}
+
+void TouchISR() {
+  last_time = esp_timer_get_time();
+  state = STATE_TIMER_START;
+}
+
+int update_array(float my_array[], float new_val) {
+  float avg = 0;
+	int retval = 0;
+  for (int i = 4; i >= 0; i--) {
+    if (DEBUG > 1) {
+      Serial.print("Value " );
+      Serial.print(i);
+      Serial.print(": ");
+      Serial.println(my_array[i]);
+    }
+    avg += my_array[i];
+  }
+  avg /= 5;
+  if (DEBUG > 1) {
+    Serial.print("New value: ");
+    Serial.print(new_val);
+    Serial.print(", Avg: ");
+    Serial.println(avg);
+  }
+	if (DEBUG > 0) {
+		Serial.print("State: ");
+		Serial.println(state);
+	}
+  /* If > 1% difference */
+	float percentage_diff = (abs(new_val - avg) / avg) * 100;
+  if ((percentage_diff > THRESHOLD_PERCENTAGE) && (state == STATE_TIMER_START)) {
+		float elapsed_time = esp_timer_get_time() - last_time;
+		last_time = esp_timer_get_time();
+    state = STATE_WAITING;
+		retval = 1;
+		u8g2.clearBuffer();
+		u8g2.setCursor(0, 0);
+		u8g2.print("Break: ");
+    Serial.print("Break in the continuum: %diff: ");
+		Serial.print(percentage_diff);
+		Serial.print(" Avg: ");
+		Serial.print(avg);
+		Serial.print(" New val: ");
+		Serial.print(new_val);
+		Serial.print(" time: ");
+  }
+  for (int i = 4; i >= 0; i--) {
+    if (i == 0) {
+      if (DEBUG > 1) {
+        Serial.print("Setting new val: ");
+        Serial.print(i);
+        Serial.print(": ");
+        Serial.println(new_val);
+      }
+      my_array[i] = new_val;
+    } else {
+      if (DEBUG > 1) {
+        Serial.print("Moving values around: Element ");
+        Serial.print(i);
+        Serial.print(" is now ");
+        Serial.println(my_array[i -1]);
+      }
+      my_array[i] = my_array[i - 1];
+    }
+  }
+	return retval;
+}
+
+void loop() {
+  /* Get new sensor events with the readings */
+  mpu.getEvent(&a, &g, &temp);
+
+  /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
+  if (DEBUG > 0) {
+    Serial.print("Acceleration_X:");
+    Serial.print(a.acceleration.x);
+    Serial.print(",Acceleration_Y:");
+    Serial.print(a.acceleration.y);
+    Serial.print(",Acceleration_Z:");
+    Serial.println(a.acceleration.z);
+  }
+	if (update_array(last_5_x, a.acceleration.x) > 0) {
+		Serial.println("Break: X");
+	}
+	if (update_array(last_5_y, a.acceleration.y) > 0) {
+		Serial.println("Break: Y");
+	}
+	if (update_array(last_5_z, a.acceleration.z) > 0) {
+		Serial.println("Break: Z");
+	}
+  /* Go as quick as we can: */
+  delay(2000);
+}
