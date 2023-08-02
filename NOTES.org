@@ -1,0 +1,16 @@
+* Setting another pin for I2C
+- ESP32 can set any pin for i2c, as long as it's not in use by another function
+- https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/
+  #+begin_src c++
+    // These are open in the WeMos Lolin32Lite
+
+    #include <Wire.h>
+
+    #define I2C_SDA 23
+    #define I2C_SCL 19
+    
+    Wire.begin(I2C_SDA, I2C_SCL);
+  #+end_src
+  - https://esp32.com/viewtopic.php?t=6402
+* TODO Break out threshold calculation to its own function
+* TODO Print out welcome screen at bootup
