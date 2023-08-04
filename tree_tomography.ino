@@ -59,6 +59,8 @@ int state = STATE_WAITING;
 
 #define THRESHOLD_PERCENTAGE 5
 
+#define SLEEPYTIME 2000
+
 void setup(void) {
   Serial.begin(115200);
   while (!Serial)
@@ -170,6 +172,5 @@ void loop() {
   if (update_array(last_5_z, a.acceleration.z) > 0) {
     Serial.println("Break: Z");
   }
-  /* Go as quick as we can: */
-  delay(2000);
+  delay(SLEEPYTIME);
 }
