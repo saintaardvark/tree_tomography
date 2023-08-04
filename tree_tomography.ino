@@ -75,20 +75,12 @@ void setup(void) {
     }
   }
   Serial.println("MPU6050 Found!");
-
   mpuSetup();
-
   Serial.println("");
-  // u8g2 stuff
-  Serial.println("Initializing screen...");
-  u8g2.begin();
-  u8g2_prepare();
-  u8g2.enableUTF8Print();
-  u8g2.setContrast(70);
-  u8g2.clearBuffer();
-  u8g2.setCursor(0, 0);
-  u8g2.print("Tree Tomography!");
 
+  Serial.println("Initializing screen...");
+  u8g2_prepare();
+  u8g2.print("Tree Tomography!");
   Serial.println();
 
   delay(100);
@@ -102,7 +94,7 @@ void TouchISR() {
 
 int update_array(float my_array[], float new_val) {
   float avg = 0;
-	int retval = 0;
+  int retval = 0;
   for (int i = 4; i >= 0; i--) {
     if (DEBUG > 1) {
       Serial.print("Value " );
@@ -119,27 +111,28 @@ int update_array(float my_array[], float new_val) {
     Serial.print(", Avg: ");
     Serial.println(avg);
   }
-	if (DEBUG > 0) {
-		Serial.print("State: ");
-		Serial.println(state);
-	}
+  if (DEBUG > 0) {
+    Serial.print("State: ");
+    Serial.println(state);
+  }
   /* If > 1% difference */
-	float percentage_diff = (abs(new_val - avg) / avg) * 100;
+  float percentage_diff = (abs(new_val - avg) / avg) * 100;
   if ((percentage_diff > THRESHOLD_PERCENTAGE) && (state == STATE_TIMER_START)) {
-		float elapsed_time = esp_timer_get_time() - last_time;
-		last_time = esp_timer_get_time();
+    float elapsed_time = esp_timer_get_time() - last_time;
+    last_time = esp_timer_get_time();
     state = STATE_WAITING;
-		retval = 1;
-		u8g2.clearBuffer();
-		u8g2.setCursor(0, 0);
-		u8g2.print("Break: ");
+    retval = 1;
+    u8g2.clearBuffer();
+    u8g2.setCursor(0, 0);
+    u8g2.print("Break: ");
     Serial.print("Break in the continuum: %diff: ");
-		Serial.print(percentage_diff);
-		Serial.print(" Avg: ");
-		Serial.print(avg);
-		Serial.print(" New val: ");
-		Serial.print(new_val);
-		Serial.print(" time: ");
+    Serial.print(percentage_diff);
+    Serial.print(" Avg: ");
+    Serial.print(avg);
+    Serial.print(" New val: ");
+    Serial.print(new_val);
+    Serial.print(" time: ");
+    Serial.println(elapsed_time);
   }
   for (int i = 4; i >= 0; i--) {
     if (i == 0) {
@@ -160,31 +153,23 @@ int update_array(float my_array[], float new_val) {
       my_array[i] = my_array[i - 1];
     }
   }
-	return retval;
+  return retval;
 }
 
 void loop() {
   /* Get new sensor events with the readings */
   mpu.getEvent(&a, &g, &temp);
-
+	maybe_debug_accel();
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
-  if (DEBUG > 0) {
-    Serial.print("Acceleration_X:");
-    Serial.print(a.acceleration.x);
-    Serial.print(",Acceleration_Y:");
-    Serial.print(a.acceleration.y);
-    Serial.print(",Acceleration_Z:");
-    Serial.println(a.acceleration.z);
+  /* if (update_array(last_5_x, a.acceleration.x) > 0) { */
+  /*  Serial.println("Break: X"); */
+  /* } */
+  /* if (update_array(last_5_y, a.acceleration.y) > 0) { */
+  /*  Serial.println("Break: Y"); */
+  /* } */
+  if (update_array(last_5_z, a.acceleration.z) > 0) {
+    Serial.println("Break: Z");
   }
-	if (update_array(last_5_x, a.acceleration.x) > 0) {
-		Serial.println("Break: X");
-	}
-	if (update_array(last_5_y, a.acceleration.y) > 0) {
-		Serial.println("Break: Y");
-	}
-	if (update_array(last_5_z, a.acceleration.z) > 0) {
-		Serial.println("Break: Z");
-	}
   /* Go as quick as we can: */
   delay(2000);
 }
