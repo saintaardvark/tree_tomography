@@ -18,6 +18,8 @@
 /* #endif */
 
 #include "lcd_screen.h"
+#include "mpu6060_setup.h"
+#include "accel.h"
 
 Adafruit_MPU6050 mpu;
 

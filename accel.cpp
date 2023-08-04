@@ -1,3 +1,5 @@
+#include <Adafruit_Sensor.h>
+
 void maybe_debug_accel(sensors_event_t *a) {
   if (DEBUG > 0) {
     Serial.print("Acceleration_X:");

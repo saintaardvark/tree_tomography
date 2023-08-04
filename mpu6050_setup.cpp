@@ -1,3 +1,5 @@
+#include <Adafruit_MPU6050.h>
+
 void mpuSetup() {
 
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
