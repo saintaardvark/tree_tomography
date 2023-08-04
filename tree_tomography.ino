@@ -28,18 +28,13 @@ Adafruit_MPU6050 mpu;
   0: no debugging
   1: some debugging
   2; more debugging
- */
+*/
 #define DEBUG 1
 
 #define TOUCH_PIN 4
 #define TOUCH_THRESHOLD 40
 
-sensors_event_t a, g, temp;
 float touch;
-
-float last_5_x[5];
-float last_5_y[5];
-float last_5_z[5];
 
 int64_t last_time = 0;
 
@@ -160,8 +155,13 @@ int update_array(float my_array[], float new_val) {
 
 void loop() {
   /* Get new sensor events with the readings */
+	sensors_event_t a, g, temp;
+
+	float last_5_x[5];
+	float last_5_y[5];
+	float last_5_z[5];
   mpu.getEvent(&a, &g, &temp);
-	maybe_debug_accel();
+	maybe_debug_accel(&a);
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
   /* if (update_array(last_5_x, a.acceleration.x) > 0) { */
   /*  Serial.println("Break: X"); */
