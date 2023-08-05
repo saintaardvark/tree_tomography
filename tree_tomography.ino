@@ -76,7 +76,7 @@ void TouchISR() {
     return;
   }
   /* TODO: remove this */
-  Serial.println("Changing state!");
+  Serial.println("Changing state to ARMED!");
   state = STATE_ARMED;
 }
 
@@ -87,7 +87,7 @@ void HammerISR() {
   }
   last_time = esp_timer_get_time();
   /* TODO: remove this */
-  Serial.println("Changing state!");
+  Serial.println("Changing state to STARTED!");
   state = STATE_TIMER_STARTED;
 }
 
@@ -115,6 +115,7 @@ int update_array(float my_array[], float new_val) {
   if ((percentage_diff > THRESHOLD_PERCENTAGE) && (state == STATE_TIMER_STARTED)) {
     float elapsed_time = esp_timer_get_time() - last_time;
     last_time = esp_timer_get_time();
+    Serial.println("Changing state to WAITING!");
     state = STATE_WAITING;
     retval = 1;
     displayTimer(elapsed_time, percentage_diff, avg, new_val);
@@ -152,7 +153,7 @@ void loop() {
   int buttonState = 0 ;
   /* FIXME: Is this the cause of the crash? */
   /* int buttonState = digitalRead(HAMMER_PIN); */
-  maybe_debug(&a, state, buttonState);
+  maybe_debug(&a, state, buttonState, last_time);
   displayArmedOrNot(state, buttonState);
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
   /* if (update_array(last_5_x, a.acceleration.x) > 0) { */

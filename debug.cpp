@@ -2,7 +2,7 @@
 
 #include "constants.h"
 
-void maybe_debug(sensors_event_t *a, int state, int buttonState) {
+void maybe_debug(sensors_event_t *a, int state, int buttonState, int64_t last_time) {
   if (DEBUG > 0) {
     Serial.print("Acceleration_X:");
     Serial.print(a->acceleration.x);
@@ -13,6 +13,10 @@ void maybe_debug(sensors_event_t *a, int state, int buttonState) {
     Serial.print(",ButtonState:");
     Serial.print(buttonState);
     Serial.print(",State:");
-    Serial.println(state);
+    Serial.print(state);
+    Serial.print(",LastTime:");
+    Serial.print(last_time);
+    Serial.print(",Now:");
+    Serial.println(esp_timer_get_time());
   }
 }
