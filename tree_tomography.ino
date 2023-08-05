@@ -93,7 +93,7 @@ int update_array(float my_array[], float new_val) {
   }
   /* If > 1% difference */
   float percentage_diff = (abs(new_val - avg) / avg) * 100;
-  if ((percentage_diff > THRESHOLD_PERCENTAGE) && (state == STATE_TIMER_START)) {
+  if ((percentage_diff > THRESHOLD_PERCENTAGE) && (state == STATE_TIMER_STARTED)) {
     float elapsed_time = esp_timer_get_time() - last_time;
     last_time = esp_timer_get_time();
     state = STATE_WAITING;

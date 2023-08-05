@@ -16,13 +16,15 @@
 
 /* Waiting for touch to be triggered */
 #define STATE_WAITING 0
-/* Touch triggered; waiting for accel shock */
-#define STATE_TIMER_START 1
-/* Accel shock happened; end timer.
+/* Touch triggered; timer armed; waiting for accel shock to actually start timer */
+#define STATE_ARMED 1
+/* Hammerpin interrupt happened; start timer. */
+#define STATE_TIMER_STARTED 2
+/*
    Note: I don't know that I need this...I think I can just go
    back to STATE_WAITING.
 */
-#define STATE_TIMER_ENDED 2
+#define STATE_TIMER_ENDED 3
 /* After that: go to STATE_WAITING */
 
 #define THRESHOLD_PERCENTAGE 5
