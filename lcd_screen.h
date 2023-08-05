@@ -1,3 +1,11 @@
+#include <U8g2lib.h>
+#ifdef U8X8_HAVE_HW_SPI
+#include <SPI.h>
+#endif
+#ifdef U8X8_HAVE_HW_I2C
+#include <Wire.h>
+#endif
+
 #define CS_PIN 32               /* Goes to pin 1, labelled CS */
 #define SS 32                   /* for clarity */
 // st7565 1 pin (CS)
@@ -17,6 +25,8 @@
 // st7565 5 pin (SI)
 
 // https://www.youtube.com/watch?v=wXDFW6NsDK4
-// Original arduino pinout:
-// U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0,/*clock=*/ 8,/* data=*/ 9,/* cs=*/ 5,/* dc=*/ 7,/* reset=*/ 6);u
-U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RSE_PIN);
+
+extern U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2;
+
+void u8g2_prepare();
+

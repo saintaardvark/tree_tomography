@@ -8,22 +8,13 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
-#include <U8g2lib.h>
-#ifdef U8X8_HAVE_HW_SPI
-#include <SPI.h>
-#endif
-/* Not needed, since included up above */
-/* #ifdef U8X8_HAVE_HW_I2C */
-/* #include <Wire.h> */
-/* #endif */
-
-#include "lcd_screen.h"
 #include "mpu6060_setup.h"
+#include "lcd_screen.h"
 #include "accel.h"
 #include "constants.h"
-#include "u8g2_prepare.h"
 
 Adafruit_MPU6050 mpu;
+U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RSE_PIN);
 
 float touch;
 
