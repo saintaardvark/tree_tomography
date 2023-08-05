@@ -43,10 +43,12 @@ void setup(void) {
   Serial.println("Initializing screen...");
   u8g2_prepare();
   u8g2.print("Tree Tomography!");
+  u8g2.setCursor(0, 20);
+  u8g2.print("Press touchpad to start");
   u8g2.sendBuffer();
   Serial.println();
 
-  delay(100);
+  delay(1000);
   touchAttachInterrupt(T0, TouchISR, TOUCH_THRESHOLD);
 }
 
