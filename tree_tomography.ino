@@ -80,14 +80,10 @@ int update_array(float my_array[], float new_val) {
   }
   avg /= 5;
   if (DEBUG > 1) {
-    Serial.print("New value: ");
+    Serial.print("New value:");
     Serial.print(new_val);
-    Serial.print(", Avg: ");
+    Serial.print(",Avg:");
     Serial.println(avg);
-  }
-  if (DEBUG > 0) {
-    Serial.print("State: ");
-    Serial.println(state);
   }
   /* If > 1% difference */
   float percentage_diff = (abs(new_val - avg) / avg) * 100;
@@ -128,7 +124,7 @@ void loop() {
   float last_5_y[5];
   float last_5_z[5];
   mpu.getEvent(&a, &g, &temp);
-  maybe_debug_accel(&a);
+  maybe_debug_accel(&a, state);
   displayArmedOrNot(state);
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
   /* if (update_array(last_5_x, a.acceleration.x) > 0) { */
