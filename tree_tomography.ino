@@ -72,12 +72,20 @@ void setup(void) {
 
 void TouchISR() {
   last_time = esp_timer_get_time();
+  if (state = STATE_ARMED) {
+    /* Don't go through this if we've already set state to ARMED */
+    return;
+  }
   /* TODO: remove this */
   Serial.println("Changing state!");
   state = STATE_ARMED;
 }
 
 void HammerISR() {
+  if (state = STATE_TIMER_STARTED) {
+    /* Don't go through this if we've already started the timer */
+    return;
+  }
   last_time = esp_timer_get_time();
   /* TODO: remove this */
   Serial.println("Changing state!");
