@@ -18,9 +18,12 @@ CLOSED: [2023-08-05 Sat 06:00]
 CLOSED: [2023-08-05 Sat 06:02]
 * DONE Print out elapsed time to screen & don't overwrite it until armed again
 CLOSED: [2023-08-05 Sat 06:02]
-* TODO Detect hammer hit
+* DONE Detect hammer hit
+CLOSED: [2023-08-05 Sat 14:18]
 - Pick pin for digital (?) interrupt
 - Test with button push
 - Break out to more foil, alligator clip
 - Test w/hammer hit
+* TODO Fix hammer timing
 * TODO Break out threshold calculation to its own function
+* TODO Consistify snake_case / camelCase varnames
