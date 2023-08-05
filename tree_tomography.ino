@@ -8,12 +8,12 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
-/* Debugging is set in constants.h */
+/* Despite the name, Debugging is set in constants.h */
 #include "constants.h"
+#include "debug.h"
 #include "mpu6060_setup.h"
+/* TODO: these names overlap; pick something better */
 #include "lcd_screen.h"
-#include "accel.h"
-
 #include "display.h"
 
 Adafruit_MPU6050 mpu;
@@ -130,8 +130,9 @@ void loop() {
   float last_5_y[5];
   float last_5_z[5];
   mpu.getEvent(&a, &g, &temp);
-  maybe_debug_accel(&a, state);
-  displayArmedOrNot(state);
+  int buttonState = digitalRead(HAMMER_PIN);
+  maybe_debug(&a, state, buttonState);
+  displayArmedOrNot(state, buttonState);
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
   /* if (update_array(last_5_x, a.acceleration.x) > 0) { */
   /*  Serial.println("Break: X"); */

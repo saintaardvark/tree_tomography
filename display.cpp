@@ -27,15 +27,14 @@ void displayTimer(float elapsed_time, float percentage_diff, float avg, float ne
         Serial.println(elapsed_time);
 }
 
-void displayArmedOrNot(int state) {
+void displayArmedOrNot(int state, int buttonState) {
         if (state == STATE_WAITING) {
                 return;
         }
         u8g2.clearBuffer();
         u8g2.setCursor(0, 0);
         u8g2.print("Armed...");
-        // FIXME: Also showing whether button pushed
-        int buttonState = digitalRead(HAMMER_PIN);
+
         u8g2.setCursor(0, 20);
         u8g2.print("Button: ");
         if (buttonState == HIGH) {
@@ -43,5 +42,6 @@ void displayArmedOrNot(int state) {
         } else {
            u8g2.print("Off");
         }
+
         u8g2.sendBuffer();
 }
