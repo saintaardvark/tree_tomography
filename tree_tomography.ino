@@ -20,8 +20,8 @@ Adafruit_MPU6050 mpu;
 U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RSE_PIN);
 
 float touch;
-int64_t last_time = 0;
-int state = STATE_WAITING;
+volatile int64_t last_time = 0;
+volatile int state = STATE_WAITING;
 
 void setup(void) {
   Serial.begin(115200);
