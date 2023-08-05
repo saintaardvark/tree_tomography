@@ -33,8 +33,11 @@ void displayArmedOrNot(int state, int buttonState) {
         }
         u8g2.clearBuffer();
         u8g2.setCursor(0, 0);
-        u8g2.print("Armed...");
-
+        if (state == STATE_ARMED) {
+                u8g2.print("Armed...");
+        } else {
+                u8g2.print("Press button to time");
+        }
         u8g2.setCursor(0, 20);
         u8g2.print("Button: ");
         if (buttonState == HIGH) {
