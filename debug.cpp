@@ -10,8 +10,8 @@ void maybe_debug(sensors_event_t *a, int state, int buttonState) {
     Serial.print(a->acceleration.y);
     Serial.print(",Acceleration_Z:");
     Serial.print(a->acceleration.z);
-    int buttonState = digitalRead(HAMMER_PIN);
-    
+    Serial.print(",ButtonState:");
+    Serial.print(buttonState);
     Serial.print(",State:");
     Serial.println(state);
   }
