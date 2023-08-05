@@ -72,6 +72,11 @@ void TouchISR() {
   state = STATE_TIMER_START;
   state = STATE_ARMED;
 }
+
+void HammerISR() {
+  last_time = esp_timer_get_time();
+  Serial.println("Changing state!");
+  state = STATE_TIMER_STARTED;
 }
 
 int update_array(float my_array[], float new_val) {
