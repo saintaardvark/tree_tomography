@@ -65,6 +65,9 @@ void setup(void) {
 
   delay(1000);
   touchAttachInterrupt(T0, TouchISR, TOUCH_THRESHOLD);
+  /* TODO: Not sure if RISING or HIGH is better here. I'm assuming
+     that the change is what I'm after. */
+  attachInterrupt(HAMMER_PIN, HammerISR, RISING);
 }
 
 void TouchISR() {
