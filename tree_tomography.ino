@@ -60,6 +60,7 @@ void setup(void) {
   Serial.println("Initializing screen...");
   u8g2_prepare();
   u8g2.print("Tree Tomography!");
+  u8g2.sendBuffer();
   Serial.println();
 
   delay(100);
