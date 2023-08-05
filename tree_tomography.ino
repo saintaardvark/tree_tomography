@@ -74,7 +74,7 @@ void setup(void) {
     }
   }
   Serial.println("MPU6050 Found!");
-  mpuSetup();
+  mpuSetup(&mpu);
   Serial.println("");
 
   Serial.println("Initializing screen...");
