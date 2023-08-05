@@ -12,5 +12,10 @@
     Wire.begin(I2C_SDA, I2C_SCL);
   #+end_src
   - https://esp32.com/viewtopic.php?t=6402
+* DONE Print out welcome screen at bootup
+CLOSED: [2023-08-05 Sat 06:00]
+* DONE Print "Armed..." screen
+CLOSED: [2023-08-05 Sat 06:02]
+* DONE Print out elapsed time to screen & don't overwrite it until armed again
+CLOSED: [2023-08-05 Sat 06:02]
 * TODO Break out threshold calculation to its own function
-* TODO Print out welcome screen at bootup

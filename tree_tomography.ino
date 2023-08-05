@@ -79,10 +79,6 @@ int update_array(float my_array[], float new_val) {
   if (DEBUG > 0) {
     Serial.print("State: ");
     Serial.println(state);
-    u8g2.clearBuffer();
-    u8g2.setCursor(0, 0);
-    u8g2.print(state);
-    u8g2.sendBuffer();
   }
   /* If > 1% difference */
   float percentage_diff = (abs(new_val - avg) / avg) * 100;
@@ -124,6 +120,7 @@ void loop() {
   float last_5_z[5];
   mpu.getEvent(&a, &g, &temp);
   maybe_debug_accel(&a);
+  displayArmedOrNot(state);
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
   /* if (update_array(last_5_x, a.acceleration.x) > 0) { */
   /*  Serial.println("Break: X"); */

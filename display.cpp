@@ -1,7 +1,7 @@
 // (setq-default indent-tabs-mode nil)
 
 #include "lcd_screen.h"
-
+#include "constants.h"
 void displayTimer(float elapsed_time, float percentage_diff, float avg, float new_val) {
         u8g2.clearBuffer();
         u8g2.setCursor(0, 0);
@@ -19,4 +19,14 @@ void displayTimer(float elapsed_time, float percentage_diff, float avg, float ne
         Serial.print(new_val);
         Serial.print(" time: ");
         Serial.println(elapsed_time);
+}
+
+void displayArmedOrNot(int state) {
+        if (state == STATE_WAITING) {
+                return;
+        }
+        u8g2.clearBuffer();
+        u8g2.setCursor(0, 0);
+        u8g2.print("Armed...");
+        u8g2.sendBuffer();
 }
