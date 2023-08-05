@@ -70,6 +70,8 @@ void setup(void) {
 void TouchISR() {
   last_time = esp_timer_get_time();
   state = STATE_TIMER_START;
+  state = STATE_ARMED;
+}
 }
 
 int update_array(float my_array[], float new_val) {
