@@ -10,6 +10,11 @@ void displayTimer(float elapsed_time, float percentage_diff, float avg, float ne
         // sprintf(s, "Time: %f", elapsed_time);
         // u8g2.drawStr(0, 15, s);
         u8g2.print(elapsed_time);
+        u8g2.setCursor(0, 20);
+        // TODO: Function to wrap text.  21 chars appears to be limit.
+        u8g2.print("Press touchpad to");
+        u8g2.setCursor(0, 30);
+        u8g2.print("restart...");
         u8g2.sendBuffer();
         Serial.print("Break in the continuum: %diff: ");
         Serial.print(percentage_diff);
