@@ -11,6 +11,9 @@
 #define TOUCH_PIN 4
 #define TOUCH_THRESHOLD 40
 
+/* Looks like maybe I should avoid GPIO 0, since it's labelled CLK1? */
+#define HAMMER_PIN 2
+
 /* Waiting for touch to be triggered */
 #define STATE_WAITING 0
 /* Touch triggered; waiting for accel shock */

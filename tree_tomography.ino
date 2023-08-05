@@ -8,10 +8,12 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
+/* Debugging is set in constants.h */
+#include "constants.h"
 #include "mpu6060_setup.h"
 #include "lcd_screen.h"
 #include "accel.h"
-#include "constants.h"
+
 #include "display.h"
 
 Adafruit_MPU6050 mpu;
@@ -31,6 +33,7 @@ void setup(void) {
   u8g2.print("Tree Tomography!");
 
 
+  /* TODO: Break this out into a separate function */
   Serial.println("Adafruit MPU6050 test!");
   Wire.begin(I2C_SDA, I2C_SCL);
 
@@ -49,6 +52,9 @@ void setup(void) {
   Serial.println("MPU6050 Found!");
   mpuSetup(&mpu);
   Serial.println("");
+
+  /* Set up hammer pin */
+  pinMode(HAMMER_PIN, INPUT);
 
   u8g2.setCursor(0, 20);
   u8g2.print("Press touchpad");

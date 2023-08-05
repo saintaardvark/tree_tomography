@@ -2,6 +2,7 @@
 
 #include "lcd_screen.h"
 #include "constants.h"
+
 void displayTimer(float elapsed_time, float percentage_diff, float avg, float new_val) {
         u8g2.clearBuffer();
         u8g2.setCursor(0, 0);
@@ -33,5 +34,14 @@ void displayArmedOrNot(int state) {
         u8g2.clearBuffer();
         u8g2.setCursor(0, 0);
         u8g2.print("Armed...");
+        // FIXME: Also showing whether button pushed
+        int buttonState = digitalRead(HAMMER_PIN);
+        u8g2.setCursor(0, 20);
+        u8g2.print("Button: ");
+        if (buttonState == HIGH) {
+          u8g2.print("On");
+        } else {
+           u8g2.print("Off");
+        }
         u8g2.sendBuffer();
 }
