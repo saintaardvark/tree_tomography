@@ -94,6 +94,10 @@ int update_array(float my_array[], float new_val) {
   if (DEBUG > 0) {
     Serial.print("State: ");
     Serial.println(state);
+    u8g2.clearBuffer();
+    u8g2.setCursor(0, 0);
+    u8g2.print(state);
+    u8g2.sendBuffer();
   }
   /* If > 1% difference */
   float percentage_diff = (abs(new_val - avg) / avg) * 100;
