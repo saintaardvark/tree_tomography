@@ -104,7 +104,7 @@ int update_array(float my_array[], float new_val) {
       my_array[i] = new_val;
     } else {
       if (DEBUG > 1) {
-        Serial.print("Moving values around: Element ");
+       Serial.print("Moving values around: Element ");
         Serial.print(i);
         Serial.print(" is now ");
         Serial.println(my_array[i -1]);
