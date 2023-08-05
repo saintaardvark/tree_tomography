@@ -6,7 +6,7 @@
 #include <Wire.h>
 #endif
 
-void u8g2_prepare(void) {
+void u8g2_prepare() {
   u8g2.begin();
   u8g2.enableUTF8Print();
   u8g2.setContrast(70);

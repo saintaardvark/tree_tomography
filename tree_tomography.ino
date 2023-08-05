@@ -21,6 +21,7 @@
 #include "mpu6060_setup.h"
 #include "accel.h"
 #include "constants.h"
+#include "u8g2_prepare.h"
 
 Adafruit_MPU6050 mpu;
 
