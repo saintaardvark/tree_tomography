@@ -26,12 +26,22 @@ void setup(void) {
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
 
+  Serial.println("Initializing screen...");
+  u8g2_prepare();
+  u8g2.print("Tree Tomography!");
+
+
   Serial.println("Adafruit MPU6050 test!");
   Wire.begin(I2C_SDA, I2C_SCL);
 
   // Try to initialize!
   if (!mpu.begin()) {
     Serial.println("Failed to find MPU6050 chip");
+    u8g2.clearBuffer();
+    u8g2.setCursor(0, 20);
+    u8g2.print("No MPU6050 found!");
+    u8g2.sendBuffer();
+
     while (1) {
       delay(10);
     }
@@ -40,9 +50,6 @@ void setup(void) {
   mpuSetup(&mpu);
   Serial.println("");
 
-  Serial.println("Initializing screen...");
-  u8g2_prepare();
-  u8g2.print("Tree Tomography!");
   u8g2.setCursor(0, 20);
   u8g2.print("Press touchpad");
   u8g2.setCursor(0, 30);
