@@ -75,8 +75,6 @@ void TouchISR() {
     /* Don't go through this if we've already set state to ARMED */
     return;
   }
-  /* TODO: remove this */
-  Serial.println("Changing state to ARMED!");
   state = STATE_ARMED;
 }
 
@@ -86,8 +84,6 @@ void HammerISR() {
     return;
   }
   last_time = esp_timer_get_time();
-  /* TODO: remove this */
-  Serial.println("Changing state to STARTED!");
   state = STATE_TIMER_STARTED;
 }
 
