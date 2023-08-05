@@ -12,6 +12,7 @@
 #include "lcd_screen.h"
 #include "accel.h"
 #include "constants.h"
+#include "display.h"
 
 Adafruit_MPU6050 mpu;
 U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RSE_PIN);
@@ -100,17 +101,7 @@ int update_array(float my_array[], float new_val) {
     last_time = esp_timer_get_time();
     state = STATE_WAITING;
     retval = 1;
-    u8g2.clearBuffer();
-    u8g2.setCursor(0, 0);
-    u8g2.print("Break: ");
-    Serial.print("Break in the continuum: %diff: ");
-    Serial.print(percentage_diff);
-    Serial.print(" Avg: ");
-    Serial.print(avg);
-    Serial.print(" New val: ");
-    Serial.print(new_val);
-    Serial.print(" time: ");
-    Serial.println(elapsed_time);
+    displayTimer(elapsed_time, percentage_diff, avg, new_val);
   }
   for (int i = 4; i >= 0; i--) {
     if (i == 0) {
