@@ -142,7 +142,9 @@ void loop() {
   float last_5_y[5];
   float last_5_z[5];
   mpu.getEvent(&a, &g, &temp);
-  int buttonState = digitalRead(HAMMER_PIN);
+  int buttonState = 0 ;
+  /* FIXME: Is this the cause of the crash? */
+  /* int buttonState = digitalRead(HAMMER_PIN); */
   maybe_debug(&a, state, buttonState);
   displayArmedOrNot(state, buttonState);
   /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
