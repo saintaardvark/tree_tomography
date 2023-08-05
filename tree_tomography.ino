@@ -71,7 +71,6 @@ void setup(void) {
 }
 
 void TouchISR() {
-  last_time = esp_timer_get_time();
   if (state = STATE_ARMED) {
     /* Don't go through this if we've already set state to ARMED */
     return;
