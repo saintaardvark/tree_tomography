@@ -18,25 +18,8 @@ Adafruit_MPU6050 mpu;
 U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RSE_PIN);
 
 float touch;
-
 int64_t last_time = 0;
-
-/* Waiting for touch to be triggered */
-#define STATE_WAITING 0
-/* Touch triggered; waiting for accel shock */
-#define STATE_TIMER_START 1
-/* Accel shock happened; end timer.
-   Note: I don't know that I need this...I think I can just go
-   back to STATE_WAITING.
-*/
-#define STATE_TIMER_ENDED 2
-/* After that: go to STATE_WAITING */
-
 int state = STATE_WAITING;
-
-#define THRESHOLD_PERCENTAGE 5
-
-#define SLEEPYTIME 2000
 
 void setup(void) {
   Serial.begin(115200);
