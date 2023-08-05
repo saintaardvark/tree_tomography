@@ -69,12 +69,14 @@ void setup(void) {
 
 void TouchISR() {
   last_time = esp_timer_get_time();
-  state = STATE_TIMER_START;
+  /* TODO: remove this */
+  Serial.println("Changing state!");
   state = STATE_ARMED;
 }
 
 void HammerISR() {
   last_time = esp_timer_get_time();
+  /* TODO: remove this */
   Serial.println("Changing state!");
   state = STATE_TIMER_STARTED;
 }
