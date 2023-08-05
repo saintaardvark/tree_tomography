@@ -44,7 +44,9 @@ void setup(void) {
   u8g2_prepare();
   u8g2.print("Tree Tomography!");
   u8g2.setCursor(0, 20);
-  u8g2.print("Press touchpad to start");
+  u8g2.print("Press touchpad");
+  u8g2.setCursor(0, 30);
+  u8g2.print("to start...");
   u8g2.sendBuffer();
   Serial.println();
 
