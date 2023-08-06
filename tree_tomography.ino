@@ -83,10 +83,10 @@ void TouchISR() {
 }
 
 void HammerISR() {
-  if (state = STATE_TIMER_STARTED) {
-    /* Don't go through this if we've already started the timer */
-    return;
-  }
+  /* if (state = STATE_TIMER_STARTED) { */
+  /*   /\* Don't go through this if we've already started the timer *\/ */
+  /*   return; */
+  /* } */
   start_time = esp_timer_get_time();
   state = STATE_TIMER_STARTED;
 }
