@@ -60,4 +60,15 @@ void mpuSetup(Adafruit_MPU6050 *mpu) {
     Serial.println("5 Hz");
     break;
   }
+  // https://github.com/adafruit/Adafruit_MPU6050/blob/master/examples/motion_detection/motion_detection.ino
+  //
+  // Commenting out this bit as experiment
+  // Oh hey: setting the ISR to catch when FALLING (not RISING) did the trick!
+  // Now get to state 3!
+  // mpu->setHighPassFilter(MPU6050_HIGHPASS_0_63_HZ);
+  mpu->setMotionDetectionThreshold(1);
+  mpu->setMotionDetectionDuration(1);
+  mpu->setInterruptPinLatch(true);	// Keep it latched.  Will turn off when reinitialized.
+  mpu->setInterruptPinPolarity(true);
+  mpu->setMotionInterrupt(true);
 }

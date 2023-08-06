@@ -69,7 +69,7 @@ void setup(void) {
   /* TODO: Not sure if RISING or HIGH is better here. I'm assuming
      that the change is what I'm after. */
   attachInterrupt(HAMMER_PIN, HammerISR, RISING);
-  attachInterrupt(MPU_PIN, mpuISR, RISING);
+  attachInterrupt(MPU_PIN, mpuISR, FALLING);
 }
 
 void TouchISR() {
