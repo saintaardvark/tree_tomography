@@ -21,6 +21,7 @@ U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RS
 
 float touch;
 volatile int64_t last_time = 0;
+volatile int64_t elapsed_time = 0;
 volatile int state = STATE_WAITING;
 
 void setup(void) {
@@ -68,6 +69,7 @@ void setup(void) {
   /* TODO: Not sure if RISING or HIGH is better here. I'm assuming
      that the change is what I'm after. */
   attachInterrupt(HAMMER_PIN, HammerISR, RISING);
+  attachInterrupt(MPU_PIN, mpuISR, RISING);
 }
 
 void TouchISR() {
@@ -85,6 +87,15 @@ void HammerISR() {
   }
   last_time = esp_timer_get_time();
   state = STATE_TIMER_STARTED;
+}
+
+void mpuISR() {
+  if (state != STATE_TIMER_STARTED) {
+    /* Don't go through this if the timer hasn't started */
+    return;
+  }
+  elapsed_time = esp_timer_get_time() - last_time;
+  state = STATE_TIMER_ENDED;
 }
 
 int update_array(float my_array[], float new_val) {
@@ -158,8 +169,8 @@ void loop() {
   /* if (update_array(last_5_y, a.acceleration.y) > 0) { */
   /*  Serial.println("Break: Y"); */
   /* } */
-  if (update_array(last_5_z, a.acceleration.z) > 0) {
-    Serial.println("Break: Z");
-  }
+  /* if (update_array(last_5_z, a.acceleration.z) > 0) { */
+  /*   Serial.println("Break: Z"); */
+  /* } */
   delay(SLEEPYTIME);
 }
