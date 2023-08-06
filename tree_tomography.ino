@@ -111,6 +111,7 @@ void loop() {
   mpu.getEvent(&a, &g, &temp);
   int buttonState = 0;
   Serial.println(start_time);
+  elapsed_time = start_time - impact_time;
   maybe_debug(&a, state, buttonState, start_time, impact_time, elapsed_time);
   displayArmedOrNot(state, buttonState);
   delay(SLEEPYTIME);
