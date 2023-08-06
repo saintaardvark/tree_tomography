@@ -20,7 +20,9 @@ Adafruit_MPU6050 mpu;
 U8G2_ST7565_ERC12864_ALT_F_4W_SW_SPI u8g2(U8G2_R0, SCK, MOSI, CS_PIN, RS_PIN, RSE_PIN);
 
 float touch;
-volatile int64_t last_time = 0;
+volatile int64_t start_time = 0;
+volatile int64_t impact_time = 0;
+volatile int64_t elapsed_time = 0;
 volatile int state = STATE_WAITING;
 
 void setup(void) {
@@ -68,6 +70,7 @@ void setup(void) {
   /* TODO: Not sure if RISING or HIGH is better here. I'm assuming
      that the change is what I'm after. */
   attachInterrupt(HAMMER_PIN, HammerISR, RISING);
+  attachInterrupt(MPU_PIN, mpuISR, FALLING);
 }
 
 void TouchISR() {
@@ -76,67 +79,27 @@ void TouchISR() {
     return;
   }
   state = STATE_ARMED;
+  start_time = 0;
 }
 
 void HammerISR() {
-  if (state = STATE_TIMER_STARTED) {
-    /* Don't go through this if we've already started the timer */
-    return;
-  }
-  last_time = esp_timer_get_time();
+  /* if (state = STATE_TIMER_STARTED) { */
+  /*   /\* Don't go through this if we've already started the timer *\/ */
+  /*   return; */
+  /* } */
+  start_time = esp_timer_get_time();
   state = STATE_TIMER_STARTED;
 }
 
-int update_array(float my_array[], float new_val) {
-  float avg = 0;
-  int retval = 0;
-  for (int i = 4; i >= 0; i--) {
-    if (DEBUG > 1) {
-      Serial.print("Value " );
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.println(my_array[i]);
-    }
-    avg += my_array[i];
-  }
-  avg /= 5;
-  if (DEBUG > 1) {
-    Serial.print("New value:");
-    Serial.print(new_val);
-    Serial.print(",Avg:");
-    Serial.println(avg);
-  }
-  /* If > 1% difference */
-  float percentage_diff = (abs(new_val - avg) / avg) * 100;
-  if ((percentage_diff > THRESHOLD_PERCENTAGE) && (state == STATE_TIMER_STARTED)) {
-    float elapsed_time = esp_timer_get_time() - last_time;
-    last_time = esp_timer_get_time();
-    Serial.println("Changing state to WAITING!");
-    state = STATE_WAITING;
-    retval = 1;
-    displayTimer(elapsed_time, percentage_diff, avg, new_val);
-  }
-  for (int i = 4; i >= 0; i--) {
-    if (i == 0) {
-      if (DEBUG > 1) {
-        Serial.print("Setting new val: ");
-        Serial.print(i);
-        Serial.print(": ");
-        Serial.println(new_val);
-      }
-      my_array[i] = new_val;
-    } else {
-      if (DEBUG > 1) {
-       Serial.print("Moving values around: Element ");
-        Serial.print(i);
-        Serial.print(" is now ");
-        Serial.println(my_array[i -1]);
-      }
-      my_array[i] = my_array[i - 1];
-    }
-  }
-  return retval;
+void mpuISR() {
+  /* if (state != STATE_TIMER_STARTED) { */
+  /*   /\* Don't go through this if the timer hasn't started *\/ */
+  /*   return; */
+  /* } */
+  impact_time = esp_timer_get_time();
+  state = STATE_TIMER_ENDED;
 }
+
 
 void loop() {
   /* Get new sensor events with the readings */
@@ -146,20 +109,10 @@ void loop() {
   float last_5_y[5];
   float last_5_z[5];
   mpu.getEvent(&a, &g, &temp);
-  int buttonState = 0 ;
-  /* FIXME: Is this the cause of the crash? */
-  /* int buttonState = digitalRead(HAMMER_PIN); */
-  maybe_debug(&a, state, buttonState, last_time);
+  int buttonState = 0;
+  Serial.println(start_time);
+  elapsed_time = start_time - impact_time;
+  maybe_debug(&a, state, buttonState, start_time, impact_time, elapsed_time);
   displayArmedOrNot(state, buttonState);
-  /* Print out the values.  No space means the Arduino IDE serial plotter will work with it. */
-  /* if (update_array(last_5_x, a.acceleration.x) > 0) { */
-  /*  Serial.println("Break: X"); */
-  /* } */
-  /* if (update_array(last_5_y, a.acceleration.y) > 0) { */
-  /*  Serial.println("Break: Y"); */
-  /* } */
-  if (update_array(last_5_z, a.acceleration.z) > 0) {
-    Serial.println("Break: Z");
-  }
   delay(SLEEPYTIME);
 }

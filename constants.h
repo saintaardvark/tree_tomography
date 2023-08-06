@@ -14,6 +14,8 @@
 /* Looks like maybe I should avoid GPIO 0, since it's labelled CLK1? */
 #define HAMMER_PIN 2
 
+#define MPU_PIN 15
+
 /* Waiting for touch to be triggered */
 #define STATE_WAITING 0
 /* Touch triggered; timer armed; waiting for accel shock to actually start timer */
