@@ -1,3 +1,16 @@
+* What times do I expect?
+For my test setup (~47 cm): something like 470-570 ms
+- Assume pine -- softwood
+- 47 cm * 10 == 470ms
+- 47 cm * 12 == 564
+https://www.youtube.com/watch?v=dAhwgIk0HU4
+- Speed of sound ("stress wave transit times")
+  - Hardwood: 7-9 microseconds/cm
+  - Softwood: 10-12 microseconds/cm
+- So nominal 30cm trunk diameter: 210-360 microseconds
+- which means needing something like 5 Mhz
+
+
 * Setting another pin for I2C
 - ESP32 can set any pin for i2c, as long as it's not in use by another function
 - https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/
@@ -8,7 +21,7 @@
 
     #define I2C_SDA 23
     #define I2C_SCL 19
-    
+
     Wire.begin(I2C_SDA, I2C_SCL);
   #+end_src
   - https://esp32.com/viewtopic.php?t=6402
@@ -24,13 +37,18 @@ CLOSED: [2023-08-05 Sat 14:18]
 - Test with button push
 - Break out to more foil, alligator clip
 - Test w/hammer hit
-* TODO Fix hammer timing
-* TODO Break out threshold calculation to its own function
-* TODO Consistify snake_case / camelCase varnames
-* TODO Interrupt for mpu6050?
+* DONE Interrupt for mpu6050?
+CLOSED: [2023-08-07 Mon 09:27]
 - https://www.eluke.nl/2016/08/11/how-to-enable-motion-detection-interrupt-on-mpu6050/
 - https://arduino.stackexchange.com/questions/48424/how-to-generate-hardware-interrupt-in-mpu6050-to-wakeup-arduino-from-sleep-mode
 - maybe https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/examples/MPU6050_DMP6/MPU6050_DMP6.ino
 - https://www.fpaynter.com//2019/10/basic-arduino-mpu6050-gy-521-test/
   - which refers to the jrowberg/ic2devlib library, though more about
     polling
+* TODO Interrupt reset for mpu6050
+- Currently I have to power cycle the esp32 to get another interrupt
+  to work. I'm assuming there's a reset I can do on the mpu itself --
+  probably something that's currently in the init routine for the mpu.
+* TODO Fix hammer timing
+* TODO Break out threshold calculation to its own function
+* TODO Consistify snake_case / camelCase varnames
