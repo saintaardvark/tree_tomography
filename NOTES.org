@@ -66,7 +66,48 @@ CLOSED: [2023-08-10 Thu 17:20]
     micropython, too
   - Good overview: https://forums.raspberrypi.com/viewtopic.php?p=1885119&sid=4cb9c5acddaf88ca3cd9082ab2fbf4b2#p1885119
   - that code: https://github.com/jbeale1/pico/blob/main/QuadHoru1.py
-* Notes on pi & timing
+* TODO Use this code on pico - micropython
 - https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/
   - 22MHz w/Pi -- so ~ 45 ns/pulse
   - though this is for *sending* signals w/gpio on pi
+* DONE Try using ESP IDF + Arduino IDE
+CLOSED: [2023-08-19 Sat 16:21]
+ Follow up to step 3 at https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/esp-idf_component.html
+#+begin_quote
+mkdir -p components && \
+cd components && \
+git clone https://github.com/espressif/arduino-esp32.git arduino && \
+cd arduino && \
+git submodule update --init --recursive && \
+cd ../.. && \
+idf.py menuconfig
+#+end_quote
+- menuconfig part fails
+  #+begin_quote
+  CMake Error at
+  /home/aardvark/dev/src/esp/sample_project/components/arduino/CMakeLists.txt:19
+  (message):
+
+  Arduino-esp32 can be used with ESP-IDF versions between 4.4.0 and 4.4.99,
+  but a newer version is detected: 5.1.0.
+  #+end_quote
+- https://github.com/espressif/arduino-esp32/issues/7852
+- Try reverting to 4.4.5
+- that worked
+- Had to edit sdkconfig & set CONFIG_FREERTOS_HZ=1000
+- Okay, found menuconfig for timer:
+  - component config
+    - High resolution timer (esp_timer)
+- Try compiling OllieK demo
+  - cp timer* main
+  - rename timer_u32_main.c to main.c
+  - idf.py build
+    #+begin_quote
+    timer.a(esp_timer.c.obj):(.literal.esp_timer_early_init+0x0): undefined reference to `esp_timer_impl_early_init'
+    /home/aardvark/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32-elf/bin/../lib/gcc/xtensa-esp32-elf/8.4.0/../../../../xtensa-esp32-elf/bin/ld: esp-idf/esp_timer/libesp_timer.a(esp_timer.c.obj): in function `esp_timer_early_init':
+    /home/aardvark/dev/src/esp/esp-idf/components/esp_timer/src/esp_timer.c:425: undefined reference to `esp_timer_impl_early_init'
+
+    #+end_quote
+- At this point I set things aside for a week.
+- Have not come back to it yet; found the Pico micropython approach &
+  it looks quite promising.
