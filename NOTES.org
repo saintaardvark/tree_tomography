@@ -59,11 +59,7 @@ CLOSED: [2023-08-10 Thu 17:20]
   to work. I'm assuming there's a reset I can do on the mpu itself --
   probably something that's currently in the init routine for the mpu.
 * Notes on pi pico & micropython timing
-- https://forums.raspberrypi.com/viewtopic.php?t=306064
-  - holy shit, this looks like it could really work -- and in fucking
-    micropython, too
-  - Good overview: https://forums.raspberrypi.com/viewtopic.php?p=1885119&sid=4cb9c5acddaf88ca3cd9082ab2fbf4b2#p1885119
-  - that code: https://github.com/jbeale1/pico/blob/main/QuadHoru1.py
+
 * DONE Try using ESP IDF + Arduino IDE
 CLOSED: [2023-08-19 Sat 16:21]
 Follow up to step 3 at https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/esp-idf_component.html
@@ -110,6 +106,14 @@ idf.py menuconfig
   - 22MHz w/Pi -- so ~ 45 ns/pulse
   - though this is for *sending* signals w/gpio on pi
 * Journal
+** [2023-08-12 Sat]
+- https://forums.raspberrypi.com/viewtopic.php?t=306064
+  - holy shit, this looks like it could really work -- and in fucking
+    micropython, too
+  - Good overview: https://forums.raspberrypi.com/viewtopic.php?p=1885119&sid=4cb9c5acddaf88ca3cd9082ab2fbf4b2#p1885119
+  - that code: https://github.com/jbeale1/pico/blob/main/QuadHoru1.py
+- Spent a bunch of time readying about PIO in pico & understanding
+  this code, and *wow* -- this really looks like it can do the trick
 ** [2023-08-19 Sat]
 - Pick up work on Raspberry pi
 - Found article on mpu6050.  Turns out there are lots of drivers for
@@ -176,3 +180,24 @@ idf.py menuconfig
         #+end_src
         then can bang the table & it works!
 
+  - Transferred to this repo (had been in pico_scratch)
+    - Initial stab at getting interrupts to trigger the pins being
+      watched; not sure I have this good yet.
+    - GPIO 15 (Pin 20) to mpu6050
+    - GIPO 14 (Pin 19) to +3v (thought this was supposed to be ground,
+      but no output -- need to re-read my notes)
+    - Expecting to be able to boot; run mpu.reset_interrupt(); then
+      bang table & stab other pin into +3v.
+    - See some output, but a) it's a little obscure, b) not prompted
+      by the bang, and c) going very quickly here before moving on to
+      other things.
+    - *Can* put mpu6050 into pin 4 -- because I still have an
+      interrupt handler here -- and bang table & get output
+  - Overall:
+    - Next up:
+      - figure out how the timing code meshes with the interrupt
+      - verify whether the mpu6050 working as expected
+        - actually, pretty sure it is
+      - make output a lot more comprehensible
+
+        
