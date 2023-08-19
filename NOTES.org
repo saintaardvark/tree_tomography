@@ -46,33 +46,27 @@ CLOSED: [2023-08-10 Thu 17:20]
 - https://www.fpaynter.com//2019/10/basic-arduino-mpu6050-gy-521-test/
   - which refers to the jrowberg/ic2devlib library, though more about
     polling
-* TODO Fix hammer timing
+* ESP32 TODOs
+** TODO Fix hammer timing
 - https://www.esp32.com/viewtopic.php?t=15734
 - https://forum.arduino.cc/t/measuring-pulse-duration-more-accurately-with-esp32/997745/7
   - https://sub.nanona.fi/esp8266/timing-and-ticks.html
 - https://esp32.com/viewtopic.php?t=4113
-* TODO Break out threshold calculation to its own function
-* TODO Consistify snake_case / camelCase varnames
-* TODO Interrupt reset for mpu6050
+** TODO Break out threshold calculation to its own function
+** TODO Consistify snake_case / camelCase varnames
+** TODO Interrupt reset for mpu6050
 - Currently I have to power cycle the esp32 to get another interrupt
   to work. I'm assuming there's a reset I can do on the mpu itself --
   probably something that's currently in the init routine for the mpu.
-* TODO Fix hammer timing
-* TODO Break out threshold calculation to its own function
-* TODO Consistify snake_case / camelCase varnames
 * Notes on pi pico & micropython timing
 - https://forums.raspberrypi.com/viewtopic.php?t=306064
   - holy shit, this looks like it could really work -- and in fucking
     micropython, too
   - Good overview: https://forums.raspberrypi.com/viewtopic.php?p=1885119&sid=4cb9c5acddaf88ca3cd9082ab2fbf4b2#p1885119
   - that code: https://github.com/jbeale1/pico/blob/main/QuadHoru1.py
-* TODO Use this code on pico - micropython
-- https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/
-  - 22MHz w/Pi -- so ~ 45 ns/pulse
-  - though this is for *sending* signals w/gpio on pi
 * DONE Try using ESP IDF + Arduino IDE
 CLOSED: [2023-08-19 Sat 16:21]
- Follow up to step 3 at https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/esp-idf_component.html
+Follow up to step 3 at https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/esp-idf_component.html
 #+begin_quote
 mkdir -p components && \
 cd components && \
@@ -111,3 +105,74 @@ idf.py menuconfig
 - At this point I set things aside for a week.
 - Have not come back to it yet; found the Pico micropython approach &
   it looks quite promising.
+* TODO Use this code on pico - micropython
+- https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/
+  - 22MHz w/Pi -- so ~ 45 ns/pulse
+  - though this is for *sending* signals w/gpio on pi
+* Journal
+** [2023-08-19 Sat]
+- Pick up work on Raspberry pi
+- Found article on mpu6050.  Turns out there are lots of drivers for
+  this, but not as many that include interrupt setting.
+  - I could probably figure out how to do this myself, but I'm
+    hoping someone has already done the work.
+- https://github.com/OneMadGypsy/upy-motion
+- Arduino driver w/interrupt: https://github.com/drfailov/MPU6050_Motion-Interrupt/blob/master/MPU6050_MotionInterrupt/MPU6050_MotionInterrupt.ino
+- but also: https://github.com/adafruit/Adafruit_MPU6050/blob/master/Adafruit_MPU6050.cpp
+  - but also see https://github.com/adafruit/Adafruit_MPU6050/issues/32
+    - The code/solution in this issue matches the OneMadGypsy
+      interrupt setting
+  - Dig a bit more into the OneMadGypsy driver & compare against the
+    Adafruit
+    - Latching
+      - Adafruit's driver sets the latch behaviour by setting 5th
+        bit, INT_PIN_CONFIG (0x37).
+      - Confirmed in register map (rev 4.2) that this is how it works
+      - No latching in OneMadGypsy
+    - Motion detection
+      - My code for adafruit has:
+        #+begin_src cpp
+          mpu->setMotionDetectionThreshold(1);
+          mpu->setMotionDetectionDuration(1);
+          mpu->setInterruptPinLatch(true);	// Keep it latched.  Will turn off when reinitialized.
+          mpu->setInterruptPinPolarity(true);
+          mpu->setMotionInterrupt(true);
+        #+end_src
+      - Adafruit drivers has motion detection threshold at register
+        0x1f, and motion duration at register 0x20
+      - I can't find *either* of those in mpu6050 register map,
+        version 4.2
+      - RIIIIIGHT: https://www.eluke.nl/2016/08/11/how-to-enable-motion-detection-interrupt-on-mpu6050/
+  - Okay, a couple things:
+    - I need to consolidate my notes on this.  Prob best to keep in
+      tree_tomography.
+    - Let's see if I can get the motion threshold & latching working.
+      - HAHAHAHHHHA, I did!  🥳
+        #+begin_src python
+          class MyMpu(MPU6050):
+              def start(self):
+                  """
+                  My own version of the Adafruit/eluke.nl code
+                  """
+                  # mpu->setMotionDetectionThreshold(1);
+                  self.__writeByte(0x1F, 0x01)
+                  # mpu->setMotionDetectionDuration(1);
+                  self.__writeByte(0x20, 0x01)
+                  # mpu->setInterruptPinLatch(true);	// Keep it latched.  Will turn off when reinitialized.
+                  # Want to set 5th (latch until clear).
+                  # Could *also* set 4th bit (clear by reading 0x3a / d58), but will leave that for now.
+                  self.__writeByte(0x37, 0x20)
+                  # mpu->setInterruptPinPolarity(true);
+                  # This is config'd by setting 0x37, 7th bit to 0.  Done above.
+                  # mpu->setMotionInterrupt(true);
+                  # IntEnable is 0x38.  Need to set 6th bit.
+                  self.__writeByte(0x38, 0x40)
+
+        #+end_src
+        Need to run:
+        #+begin_src python
+          >>> mpu.__readByte(0x3a)
+          81
+        #+end_src
+        then can bang the table & it works!
+
