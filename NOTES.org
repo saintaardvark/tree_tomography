@@ -1,110 +1,4 @@
-* What times do I expect?
-For my test setup (~47 cm): something like 470-570 ms
-- Assume pine -- softwood
-- 47 cm * 10 == 470ms
-- 47 cm * 12 == 564
-https://www.youtube.com/watch?v=dAhwgIk0HU4
-- Speed of sound ("stress wave transit times")
-  - Hardwood: 7-9 microseconds/cm
-  - Softwood: 10-12 microseconds/cm
-- So nominal 30cm trunk diameter: 210-360 microseconds
-- which means needing something like 5 Mhz
-- Also: see docs fole
-
-* Setting another pin for I2C
-- ESP32 can set any pin for i2c, as long as it's not in use by another function
-- https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/
-  #+begin_src c++
-    // These are open in the WeMos Lolin32Lite
-
-    #include <Wire.h>
-
-    #define I2C_SDA 23
-    #define I2C_SCL 19
-
-    Wire.begin(I2C_SDA, I2C_SCL);
-  #+end_src
-  - https://esp32.com/viewtopic.php?t=6402
-* DONE Print out welcome screen at bootup
-CLOSED: [2023-08-05 Sat 06:00]
-* DONE Print "Armed..." screen
-CLOSED: [2023-08-05 Sat 06:02]
-* DONE Print out elapsed time to screen & don't overwrite it until armed again
-CLOSED: [2023-08-05 Sat 06:02]
-* DONE Detect hammer hit
-CLOSED: [2023-08-05 Sat 14:18]
-- Pick pin for digital (?) interrupt
-- Test with button push
-- Break out to more foil, alligator clip
-- Test w/hammer hit
-
-* DONE Interrupt for mpu6050?
-CLOSED: [2023-08-10 Thu 17:20]
-- https://www.eluke.nl/2016/08/11/how-to-enable-motion-detection-interrupt-on-mpu6050/
-- https://arduino.stackexchange.com/questions/48424/how-to-generate-hardware-interrupt-in-mpu6050-to-wakeup-arduino-from-sleep-mode
-- maybe https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/examples/MPU6050_DMP6/MPU6050_DMP6.ino
-- https://www.fpaynter.com//2019/10/basic-arduino-mpu6050-gy-521-test/
-  - which refers to the jrowberg/ic2devlib library, though more about
-    polling
-* ESP32 TODOs
-** TODO Fix hammer timing
-- https://www.esp32.com/viewtopic.php?t=15734
-- https://forum.arduino.cc/t/measuring-pulse-duration-more-accurately-with-esp32/997745/7
-  - https://sub.nanona.fi/esp8266/timing-and-ticks.html
-- https://esp32.com/viewtopic.php?t=4113
-** TODO Break out threshold calculation to its own function
-** TODO Consistify snake_case / camelCase varnames
-** TODO Interrupt reset for mpu6050
-- Currently I have to power cycle the esp32 to get another interrupt
-  to work. I'm assuming there's a reset I can do on the mpu itself --
-  probably something that's currently in the init routine for the mpu.
-* Notes on pi pico & micropython timing
-
-* DONE Try using ESP IDF + Arduino IDE
-CLOSED: [2023-08-19 Sat 16:21]
-Follow up to step 3 at https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/esp-idf_component.html
-#+begin_quote
-mkdir -p components && \
-cd components && \
-git clone https://github.com/espressif/arduino-esp32.git arduino && \
-cd arduino && \
-git submodule update --init --recursive && \
-cd ../.. && \
-idf.py menuconfig
-#+end_quote
-- menuconfig part fails
-  #+begin_quote
-  CMake Error at
-  /home/aardvark/dev/src/esp/sample_project/components/arduino/CMakeLists.txt:19
-  (message):
-
-  Arduino-esp32 can be used with ESP-IDF versions between 4.4.0 and 4.4.99,
-  but a newer version is detected: 5.1.0.
-  #+end_quote
-- https://github.com/espressif/arduino-esp32/issues/7852
-- Try reverting to 4.4.5
-- that worked
-- Had to edit sdkconfig & set CONFIG_FREERTOS_HZ=1000
-- Okay, found menuconfig for timer:
-  - component config
-    - High resolution timer (esp_timer)
-- Try compiling OllieK demo
-  - cp timer* main
-  - rename timer_u32_main.c to main.c
-  - idf.py build
-    #+begin_quote
-    timer.a(esp_timer.c.obj):(.literal.esp_timer_early_init+0x0): undefined reference to `esp_timer_impl_early_init'
-    /home/aardvark/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32-elf/bin/../lib/gcc/xtensa-esp32-elf/8.4.0/../../../../xtensa-esp32-elf/bin/ld: esp-idf/esp_timer/libesp_timer.a(esp_timer.c.obj): in function `esp_timer_early_init':
-    /home/aardvark/dev/src/esp/esp-idf/components/esp_timer/src/esp_timer.c:425: undefined reference to `esp_timer_impl_early_init'
-
-    #+end_quote
-- At this point I set things aside for a week.
-- Have not come back to it yet; found the Pico micropython approach &
-  it looks quite promising.
-* TODO Use this code on pico - micropython
-- https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/
-  - 22MHz w/Pi -- so ~ 45 ns/pulse
-  - though this is for *sending* signals w/gpio on pi
+#+TYP_TODO: TODO NEXT | DONE WONTDO
 * Journal
 ** [2023-08-12 Sat]
 - https://forums.raspberrypi.com/viewtopic.php?t=306064
@@ -207,3 +101,112 @@ idf.py menuconfig
   - The mpu6050 is setting up an interrupt handler for GPIO 2 (pin 4)
   - I'd forgotten about the different interrupt pins!  Moving the
     interrupt pin on the MPU to pin 4 does the trick.
+
+* Notes & references
+** What times do I expect?
+For my test setup (~47 cm): something like 470-570 ms
+- Assume pine -- softwood
+- 47 cm * 10 == 470ms
+- 47 cm * 12 == 564
+https://www.youtube.com/watch?v=dAhwgIk0HU4
+- Speed of sound ("stress wave transit times")
+  - Hardwood: 7-9 microseconds/cm
+  - Softwood: 10-12 microseconds/cm
+- So nominal 30cm trunk diameter: 210-360 microseconds
+- which means needing something like 5 Mhz
+- Also: see docs fole
+
+** Setting another pin for I2C
+- ESP32 can set any pin for i2c, as long as it's not in use by another function
+- https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/
+  #+begin_src c++
+    // These are open in the WeMos Lolin32Lite
+
+    #include <Wire.h>
+
+    #define I2C_SDA 23
+    #define I2C_SCL 19
+
+    Wire.begin(I2C_SDA, I2C_SCL);
+  #+end_src
+  - https://esp32.com/viewtopic.php?t=6402
+* TODOs
+** DONE Print out welcome screen at bootup
+CLOSED: [2023-08-05 Sat 06:00]
+** DONE Print "Armed..." screen
+CLOSED: [2023-08-05 Sat 06:02]
+** DONE Print out elapsed time to screen & don't overwrite it until armed again
+CLOSED: [2023-08-05 Sat 06:02]
+** DONE Detect hammer hit
+CLOSED: [2023-08-05 Sat 14:18]
+- Pick pin for digital (?) interrupt
+- Test with button push
+- Break out to more foil, alligator clip
+- Test w/hammer hit
+
+** DONE Interrupt for mpu6050?
+CLOSED: [2023-08-10 Thu 17:20]
+- https://www.eluke.nl/2016/08/11/how-to-enable-motion-detection-interrupt-on-mpu6050/
+- https://arduino.stackexchange.com/questions/48424/how-to-generate-hardware-interrupt-in-mpu6050-to-wakeup-arduino-from-sleep-mode
+- maybe https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/examples/MPU6050_DMP6/MPU6050_DMP6.ino
+- https://www.fpaynter.com//2019/10/basic-arduino-mpu6050-gy-521-test/
+  - which refers to the jrowberg/ic2devlib library, though more about
+    polling
+** ESP32 TODOs
+*** TODO Fix hammer timing
+- https://www.esp32.com/viewtopic.php?t=15734
+- https://forum.arduino.cc/t/measuring-pulse-duration-more-accurately-with-esp32/997745/7
+  - https://sub.nanona.fi/esp8266/timing-and-ticks.html
+- https://esp32.com/viewtopic.php?t=4113
+*** TODO Break out threshold calculation to its own function
+*** TODO Consistify snake_case / camelCase varnames
+*** TODO Interrupt reset for mpu6050
+- Currently I have to power cycle the esp32 to get another interrupt
+  to work. I'm assuming there's a reset I can do on the mpu itself --
+  probably something that's currently in the init routine for the mpu.
+** DONE Try using ESP IDF + Arduino IDE
+CLOSED: [2023-08-19 Sat 16:21]
+Follow up to step 3 at https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/esp-idf_component.html
+#+begin_quote
+mkdir -p components && \
+cd components && \
+git clone https://github.com/espressif/arduino-esp32.git arduino && \
+cd arduino && \
+git submodule update --init --recursive && \
+cd ../.. && \
+idf.py menuconfig
+#+end_quote
+- menuconfig part fails
+  #+begin_quote
+  CMake Error at
+  /home/aardvark/dev/src/esp/sample_project/components/arduino/CMakeLists.txt:19
+  (message):
+
+  Arduino-esp32 can be used with ESP-IDF versions between 4.4.0 and 4.4.99,
+  but a newer version is detected: 5.1.0.
+  #+end_quote
+- https://github.com/espressif/arduino-esp32/issues/7852
+- Try reverting to 4.4.5
+- that worked
+- Had to edit sdkconfig & set CONFIG_FREERTOS_HZ=1000
+- Okay, found menuconfig for timer:
+  - component config
+    - High resolution timer (esp_timer)
+- Try compiling OllieK demo
+  - cp timer* main
+  - rename timer_u32_main.c to main.c
+  - idf.py build
+    #+begin_quote
+    timer.a(esp_timer.c.obj):(.literal.esp_timer_early_init+0x0): undefined reference to `esp_timer_impl_early_init'
+    /home/aardvark/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32-elf/bin/../lib/gcc/xtensa-esp32-elf/8.4.0/../../../../xtensa-esp32-elf/bin/ld: esp-idf/esp_timer/libesp_timer.a(esp_timer.c.obj): in function `esp_timer_early_init':
+    /home/aardvark/dev/src/esp/esp-idf/components/esp_timer/src/esp_timer.c:425: undefined reference to `esp_timer_impl_early_init'
+
+    #+end_quote
+- At this point I set things aside for a week.
+- Have not come back to it yet; found the Pico micropython approach &
+  it looks quite promising.
+** WONTDO Use this code on pico - micropython
+CLOSED: [2023-08-23 Wed 07:14]
+- https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/
+  - 22MHz w/Pi -- so ~ 45 ns/pulse
+  - though this is for *sending* signals w/gpio on pi
