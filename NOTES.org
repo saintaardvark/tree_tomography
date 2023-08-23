@@ -101,6 +101,38 @@
   - The mpu6050 is setting up an interrupt handler for GPIO 2 (pin 4)
   - I'd forgotten about the different interrupt pins!  Moving the
     interrupt pin on the MPU to pin 4 does the trick.
+- Bit of refactoring:
+  - break out my_mpu.py
+  - Still a lot to go...this is a very messy main file
+- Okay, now I think I'm closer -- and understand what I've got.
+  - mpu6050 interrupt pin is wired to GPIO 2.  Interrupt handler there
+    will print out to screen when the module is bumped.
+    mpu.reset_interrupt() will reset it.
+  - mpu6050 int. pin is *also* wired to GPIO 20.  So the timer code
+    will see when it goes.
+  - GPIO 19 is wired to a switch, with an LED in line as well, which
+    goes to +3V.  When the switch is pushed, the LED goes on, and GPIO
+    19 sees a rise.
+  - I can now do the following sequence:
+    - mpu.reset_interrupt()
+    - tap the mpu
+    - toggle the switch
+    - mpu.reset_interrupt() again
+  - and after 2 reps (need to understand this a little better), the
+    timer interrupt handler will print out timing info
+    - 🥳🥳🥳
+- MyMpu() init is setting the latch for the interrupt.  I think I
+  should be able to remove that bit, and I won't need quite so many
+  resets.
+  - When I do that, flicking the mpu gives *lots* of output.  This is
+    not what I want.
+  - Reverting to previous behaviour.
+* Pinout
+- Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
+- Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin
+- Pico GPIO 15 (label: 20) -> LED -> switch -> resistor -> +3V
+- Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
+- Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
 
 * Notes & references
 ** What times do I expect?
