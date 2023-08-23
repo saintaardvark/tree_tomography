@@ -127,6 +127,10 @@
   - When I do that, flicking the mpu gives *lots* of output.  This is
     not what I want.
   - Reverting to previous behaviour.
+- Updated pinout in README as well as adding it below.
+** TODO How to get the timer working w/o so many resets?
+** TODO Better output -- clearer, easier to understand
+
 * Pinout
 - Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
 - Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin
