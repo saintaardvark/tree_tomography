@@ -178,9 +178,10 @@ ofs = (878, -1385, 1560, 136, -54, -16)
 # TODO: Haven't tried to set the clock faster, but probably should --
 # I think the motion threshold time right now is ~ 1 ms, which is
 # rather slow.
-# FIXME: We're setting tha handler here, but that seems quite wrong....
+# FIXME: We're setting the handler here, but that seems quite wrong....
 # but otoh, we're setting it for a pin we don't use, so let's leave it.
-mpu = MyMpu(0, 20, 21, ofs, 2, handler)
+
+mpu = MyMpu(bus=0, sda=20, scl=21, ofs=ofs, intr=2, callback=handler)
 if mpu.passed_self_test:
     print("Ready to set up mpu!")
     mpu.start()
