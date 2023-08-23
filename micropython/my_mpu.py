@@ -1,6 +1,9 @@
 from mpu6050 import MPU6050
 
+
 class MyMpu(MPU6050):
+    LATCH_INTERRUPT = True
+
     def start(self):
         """
         My own version of the Adafruit/eluke.nl code
@@ -12,8 +15,12 @@ class MyMpu(MPU6050):
         # mpu->setInterruptPinLatch(true);	// Keep it latched.  Will turn off when reinitialized.
         # Want to set 5th (latch until clear).
         # Could *also* set 4th bit (clear by reading 0x3a / d58), but will leave that for now.
-        # WAIT: Maybe this isn't correct?
-        self.__writeByte(0x37, 0x20)
+        if self.LATCH_INTERRUPT is True:
+            # This also sets interrupt polarity to active high, by writing 0 to the 7th bit.
+            self.__writeByte(0x37, 0x20)
+        else:
+            # but since we're not doing it above, we do it explicitly here.
+            self.__writeByte(0x37, 0)
         # mpu->setInterruptPinPolarity(true);
         # This is config'd by setting 0x37, 7th bit to 0.  Done above.
         # mpu->setMotionInterrupt(true);
