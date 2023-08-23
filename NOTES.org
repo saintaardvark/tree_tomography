@@ -199,5 +199,11 @@ idf.py menuconfig
       - verify whether the mpu6050 working as expected
         - actually, pretty sure it is
       - make output a lot more comprehensible
-
-        
+** [2023-08-23 Wed]
+- Picking this up again.
+- I'd left undocumented a couple things from last time: the pin
+  diagram and the interrupt handling for the MPU.
+  - The timing code is watching GPIO 14 & 15 (labels: pin 19 & 20)
+  - The mpu6050 is setting up an interrupt handler for GPIO 2 (pin 4)
+  - I'd forgotten about the different interrupt pins!  Moving the
+    interrupt pin on the MPU to pin 4 does the trick.
