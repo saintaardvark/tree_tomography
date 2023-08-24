@@ -14,6 +14,7 @@
 from machine import Pin, mem32
 from rp2 import asm_pio, StateMachine, PIO
 from time import ticks_ms, ticks_diff
+from utime import sleep
 import array
 
 from my_mpu import MyMpu
@@ -31,7 +32,7 @@ start = ticks_ms()
 OFS = (878, -1385, 1560, 136, -54, -16)
 
 START_SIG_SIM = False
-
+EVENTS = []
 
 def mpu_handler(data: tuple):
     if "mpu" in globals():
@@ -40,10 +41,12 @@ def mpu_handler(data: tuple):
 
 
 def counter_handler(sm):
-    global start
+    global start, EVENTS
     for i in range(8):
         data[i] = sm.get()
     print(ticks_diff(ticks_ms(), start), data)
+    # FIXME: I should be using a mutex here: https://docs.openmv.io/library/mutex.html
+    EVENTS.append(data)
     start = ticks_ms()
 
 
@@ -82,3 +85,13 @@ mem32[PIO1_BASE | SM0_SHIFTCTRL + 0x1000] = 1 << 31
 sm4.active(1)
 # Start sm0 and sm1 in sync
 mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
+
+while True:
+    try:
+        # FIXME: Again, should be using a mutex
+        d = EVENTS.pop()
+        print(d)
+    except IndexError:
+        print("No news...")
+    mpu.reset_interrupt()
+    sleep(1)
