@@ -128,44 +128,12 @@
     not what I want.
   - Reverting to previous behaviour.
 - Updated pinout in README as well as adding it below.
-** TODO How to get the timer working w/o so many resets?
-** TODO Better output -- clearer, easier to understand
+** [2023-08-24 Thu]
+- Some refactoring to make the code clearer, plus some notes added to
+  the code.
+- Figured out I was doing the switch wrong; fixed.  Now I can hit it
+  and have it trigger Pin 15.  Adjusted pin notes to match.
 
-* Pinout
-- Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
-- Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin
-- Pico GPIO 15 (label: 20) -> LED -> switch -> resistor -> +3V
-- Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
-- Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
-
-* Notes & references
-** What times do I expect?
-For my test setup (~47 cm): something like 470-570 ms
-- Assume pine -- softwood
-- 47 cm * 10 == 470ms
-- 47 cm * 12 == 564
-https://www.youtube.com/watch?v=dAhwgIk0HU4
-- Speed of sound ("stress wave transit times")
-  - Hardwood: 7-9 microseconds/cm
-  - Softwood: 10-12 microseconds/cm
-- So nominal 30cm trunk diameter: 210-360 microseconds
-- which means needing something like 5 Mhz
-- Also: see docs fole
-
-** Setting another pin for I2C
-- ESP32 can set any pin for i2c, as long as it's not in use by another function
-- https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/
-  #+begin_src c++
-    // These are open in the WeMos Lolin32Lite
-
-    #include <Wire.h>
-
-    #define I2C_SDA 23
-    #define I2C_SCL 19
-
-    Wire.begin(I2C_SDA, I2C_SCL);
-  #+end_src
-  - https://esp32.com/viewtopic.php?t=6402
 * TODOs
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
@@ -188,7 +156,8 @@ CLOSED: [2023-08-10 Thu 17:20]
 - https://www.fpaynter.com//2019/10/basic-arduino-mpu6050-gy-521-test/
   - which refers to the jrowberg/ic2devlib library, though more about
     polling
-** ESP32 TODOs
+** WONTDO ESP32 TODOs
+CLOSED: [2023-08-24 Thu 07:17]
 *** TODO Fix hammer timing
 - https://www.esp32.com/viewtopic.php?t=15734
 - https://forum.arduino.cc/t/measuring-pulse-duration-more-accurately-with-esp32/997745/7
@@ -246,3 +215,54 @@ CLOSED: [2023-08-23 Wed 07:14]
 - https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/
   - 22MHz w/Pi -- so ~ 45 ns/pulse
   - though this is for *sending* signals w/gpio on pi
+
+** TODO How to get the timer working w/o so many resets?
+** TODO Better output -- clearer, easier to understand
+- Here I'm thinking of the interrupt handler.
+- I can imagine two approaches:
+  - Put a nice print in the interrupt handler.  Normally that's bad,
+    but for this I don't anticipate doing much after the first set of
+    interrupts are handled; no worries about stuffing more in here.
+  - Just have the interrupt handler write values to a global array or
+    some such, and have another routine watching it & printing things
+    as they come in.
+** TODO Go through thread to make sure I've captured everything
+
+* Pinout
+- Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
+- Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin
+- Pico GPIO 15 (label: 20) -> switch in -> switch out -> resistor -> +3V
+                              |
+                              +-> pos LED lead -> neg LED lead -> GND
+- Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
+- Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
+
+
+* Notes & references
+** What times do I expect?
+For my test setup (~47 cm): something like 470-570 ms
+- Assume pine -- softwood
+- 47 cm * 10 == 470ms
+- 47 cm * 12 == 564
+https://www.youtube.com/watch?v=dAhwgIk0HU4
+- Speed of sound ("stress wave transit times")
+  - Hardwood: 7-9 microseconds/cm
+  - Softwood: 10-12 microseconds/cm
+- So nominal 30cm trunk diameter: 210-360 microseconds
+- which means needing something like 5 Mhz
+- Also: see docs fole
+
+** Setting another pin for I2C
+- ESP32 can set any pin for i2c, as long as it's not in use by another function
+- https://randomnerdtutorials.com/esp32-i2c-communication-arduino-ide/
+  #+begin_src c++
+    // These are open in the WeMos Lolin32Lite
+
+    #include <Wire.h>
+
+    #define I2C_SDA 23
+    #define I2C_SCL 19
+
+    Wire.begin(I2C_SDA, I2C_SCL);
+  #+end_src
+  - https://esp32.com/viewtopic.php?t=6402
