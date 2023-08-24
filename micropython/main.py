@@ -17,7 +17,7 @@ from time import ticks_ms, ticks_diff
 import array
 
 from my_mpu import MyMpu
-from simulation import in_sig_sim
+from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
 from counter import counter
 
@@ -29,6 +29,8 @@ start = ticks_ms()
 # angle.  However, it doesn't seem to hurt it when doing early testing
 # to detect motion.
 OFS = (878, -1385, 1560, 136, -54, -16)
+
+START_SIG_SIM = False
 
 
 def mpu_handler(data: tuple):
@@ -45,22 +47,8 @@ def counter_handler(sm):
     start = ticks_ms()
 
 
-# # Instantiate and configure signal simulating SMs
-# sm0 = StateMachine(0, in_sig_sim, freq=1_000_000, set_base=Pin(14))
-# sm0.put(500_000) # Frequency control
-# sm0.exec("pull()")
-# sm0.exec("mov(isr, osr)")
-# sm0.put(100_000) # Delay control
-# sm0.exec("pull()")
-# sm0.exec("mov(x, osr)")
-# sm1 = StateMachine(1, in_sig_sim, freq=1_000_000, set_base=Pin(15))
-# sm1.put(500_000) # Frequency control
-# sm1.exec("pull()")
-# sm1.exec("mov(isr, osr)")
-# sm1.put(1) # Delay control
-# sm1.exec("pull()")
-# sm1.exec("mov(x, osr)")
-
+if START_SIG_SIM is True:
+    start_sig_sim()
 
 # TODO: Haven't tried to set the clock faster, but probably should --
 # I think the motion threshold time right now is ~ 1 ms, which is
