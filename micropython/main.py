@@ -31,8 +31,7 @@ start = ticks_ms()
 OFS = (878, -1385, 1560, 136, -54, -16)
 
 
-
-def handler(data: tuple):
+def mpu_handler(data: tuple):
     if "mpu" in globals():
         print("[{:<16}] {:<10.2f}".format("TEMPERATURE", mpu.celsius))
         mpu.print_from_data(data)
@@ -70,7 +69,7 @@ def counter_handler(sm):
 # having the MPU interrupt pin connected to both GPIO 2 *and* 14.
 # At some point, we'll want to stop that.
 
-mpu = MyMpu(bus=0, sda=20, scl=21, ofs=OFS, intr=2, callback=handler)
+mpu = MyMpu(bus=0, sda=20, scl=21, ofs=OFS, intr=2, callback=mpu_handler)
 if mpu.passed_self_test:
     print("Ready to set up mpu!")
     mpu.start()
