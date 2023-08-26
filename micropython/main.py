@@ -63,7 +63,7 @@ if START_SIG_SIM is True:
 
 mpu = MyMpu(bus=0, sda=20, scl=21, ofs=OFS, intr=2, callback=mpu_handler)
 if mpu.passed_self_test:
-    print("Ready to set up mpu!")
+    print("Ready to start up mpu!")
     mpu.start()
 
 sm2 = StateMachine(2, trigger, freq=100_000_000, in_base=Pin(14), set_base=Pin(16))
@@ -86,6 +86,9 @@ mem32[PIO1_BASE | SM0_SHIFTCTRL + 0x1000] = 1 << 31
 sm4.active(1)
 # Start sm0 and sm1 in sync
 mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
+
+print("Everything looks good!")
+print("Now entering state of cat-like readiness 😼...")
 
 i = 0
 while True:
