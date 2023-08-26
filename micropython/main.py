@@ -21,6 +21,7 @@ from my_mpu import MyMpu
 from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
 from counter import counter
+from report import process_data
 
 
 data = array.array("I", [0] * 8)
@@ -34,6 +35,7 @@ OFS = (878, -1385, 1560, 136, -54, -16)
 START_SIG_SIM = False
 EVENTS = []
 
+
 def mpu_handler(data: tuple):
     if "mpu" in globals():
         print("[{:<16}] {:<10.2f}".format("TEMPERATURE", mpu.celsius))
@@ -44,7 +46,6 @@ def counter_handler(sm):
     global start, EVENTS
     for i in range(8):
         data[i] = sm.get()
-    print(ticks_diff(ticks_ms(), start), data)
     # FIXME: I should be using a mutex here: https://docs.openmv.io/library/mutex.html
     EVENTS.append(data)
     start = ticks_ms()
@@ -86,12 +87,16 @@ sm4.active(1)
 # Start sm0 and sm1 in sync
 mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
 
+i = 0
 while True:
+    i += 1
     try:
         # FIXME: Again, should be using a mutex
+        # ('I', [2, 42949, 3, 961372, 1, 1389, 3, 7278]
         d = EVENTS.pop()
-        print(d)
+        process_data(d)
     except IndexError:
-        print("No news...")
+        if i % 20 == 0:
+            print("No news...")
     mpu.reset_interrupt()
     sleep(1)
