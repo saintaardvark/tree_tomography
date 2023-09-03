@@ -133,6 +133,38 @@
   the code.
 - Figured out I was doing the switch wrong; fixed.  Now I can hit it
   and have it trigger Pin 15.  Adjusted pin notes to match.
+** [2023-08-26 Sat]
+- Trying out piezo sensor
+  - Out of the box, the threshold for the digital timer seems good.
+  - Hooked up to the far size of the switch
+    - digital out -> pos LED -> neg LED -> GPIO 15 (label 20)
+    - Hm: had to hook up gpio15 to *pos* LED -- got this wrong.
+  - *WOW*, the wiring on this is delicate.  Broke one already.  Tried
+    to re-solder it, but no luck.
+- This mostly worked today...for a while.
+  - Ihad piezo on one side of board, mpu on other. 55cm distance
+    between them -- so anywhere from 550 to 660 microseconds.
+    - I was getting quite consistent times of ~ 1000-1300 microseconds
+      -- about double, but not orders of magnitude off.  As well,
+      there's the time of flight times in the paper; I don't remember
+      the details, but they were *way* higher when crossing the
+      grain...as this is, plus it's all separate pieces of board glued
+      together.
+  - Set up a second piezeo on other side -- say, 25cm apart.
+    - Here, banging on opposite side (so they were both about the same
+      distance away from the hammer -- about 50cm, say), the time
+      between the two was much shorter -- 5 microseconds, say.
+    - But when I hit next to the piezo, the time between them was
+      *still* about 5 microseconds.
+    - And it *stayed* like that when I switched back to the other
+      sensor.
+  - Not sure what happened here.
+    - The way I'm counting time needs to be recorded: I have, for
+      today, assumed that the line that has both ON records the time
+      from the *last* state change (one of them turning on) to *this*
+      state (both on).
+    - Not sure that's correct!  Need to re-read my notes & the code.
+    - Still -- progress!
 
 * TODOs
 ** DONE Print out welcome screen at bootup
@@ -216,8 +248,8 @@ CLOSED: [2023-08-23 Wed 07:14]
   - 22MHz w/Pi -- so ~ 45 ns/pulse
   - though this is for *sending* signals w/gpio on pi
 
-** TODO How to get the timer working w/o so many resets?
-** TODO Better output -- clearer, easier to understand
+** DONE Better output -- clearer, easier to understand
+CLOSED: [2023-08-26 Sat 14:21]
 - Here I'm thinking of the interrupt handler.
 - I can imagine two approaches:
   - Put a nice print in the interrupt handler.  Normally that's bad,
@@ -226,24 +258,29 @@ CLOSED: [2023-08-23 Wed 07:14]
   - Just have the interrupt handler write values to a global array or
     some such, and have another routine watching it & printing things
     as they come in.
-** TODO Go through thread to make sure I've captured everything
+** DONE Try out piezo sensor
+CLOSED: [2023-08-26 Sat 14:21]
 
+** TODO How to get the timer working w/o so many resets?
+** TODO Go through thread to make sure I've captured everything
+** TODO Would an ECG cable work for this?
+- https://voltagedivide.com/2017/10/14/psoc-design-and-implementation-of-a-12-lead-portable-ecg/
 * Pinout
+- "switch in" meaning closer to the Pico
 - Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
-- Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin
-- Pico GPIO 15 (label: 20) -> switch in -> switch out -> resistor -> +3V
+- Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin - 0b01
+- Pico GPIO 15 (label: 20) -> piezo digital -> switch out -> resistor -> +3V  - 0b10
                               |
-                              +-> pos LED lead -> neg LED lead -> GND
+                              +-> neg LED lead -> GND
 - Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
 - Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
 
-
 * Notes & references
 ** What times do I expect?
-For my test setup (~47 cm): something like 470-570 ms
+For my test setup (~55 cm): something like 470-570 microseconds
 - Assume pine -- softwood
-- 47 cm * 10 == 470ms
-- 47 cm * 12 == 564
+- 55 cm * 10 == 550 microseconds
+- 55 cm * 12 == 660 microseconds
 https://www.youtube.com/watch?v=dAhwgIk0HU4
 - Speed of sound ("stress wave transit times")
   - Hardwood: 7-9 microseconds/cm
