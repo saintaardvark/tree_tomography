@@ -13,9 +13,10 @@ def process_data(d, PIEZO_PIN=0b10, MPU_PIN=0b01):
         mpu_state = "ON" if (pins & MPU_PIN) > 0 else "OFF"
         time = d[i * 2 + 1] * 10  # nanoseconds
         time /= 10e3  # microseconds
+        pointer = "👈" if piezo_state == "ON" and mpu_state == "ON" else ""
         print(
-            "Piezo: {:<5} MPU: {:<5} Time: {:<5} microseconds".format(
-                piezo_state, mpu_state, time
+            "Piezo: {:<5} MPU: {:<5} Time: {:<5} microseconds {:<5}".format(
+                piezo_state, mpu_state, time, pointer
             )
         )
 
