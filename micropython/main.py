@@ -18,6 +18,7 @@ from utime import sleep
 import array
 
 from my_mpu import MyMpu
+from pulsedelay import pulsedelay
 from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
 from counter import counter
@@ -66,26 +67,31 @@ if mpu.passed_self_test:
     print("Ready to start up mpu!")
     mpu.start()
 
-sm2 = StateMachine(2, trigger, freq=100_000_000, in_base=Pin(14), set_base=Pin(16))
-sm2.active(1)
-sm3 = StateMachine(3, trigger, freq=100_000_000, in_base=Pin(15), set_base=Pin(16))
-sm3.active(1)
+# sm2 = StateMachine(2, trigger, freq=100_000_000, in_base=Pin(14), set_base=Pin(16))
+# sm2.active(1)
+# sm3 = StateMachine(3, trigger, freq=100_000_000, in_base=Pin(15), set_base=Pin(16))
+# sm3.active(1)
 
-sm4 = StateMachine(
-    4, counter, freq=100_000_000, in_base=Pin(14), jmp_pin=Pin(16), sideset_base=Pin(25)
-)
-sm4.irq(counter_handler)
+# sm4 = StateMachine(
+#     4, counter, freq=100_000_000, in_base=Pin(14), jmp_pin=Pin(16), sideset_base=Pin(25)
+# )
+# sm4.irq(counter_handler)
 
-PIO0_BASE = 0x50200000
-PIO1_BASE = 0x50300000
-PIO_CTRL = 0x000
-SM0_EXECCTRL = 0x0CC
-SM0_SHIFTCTRL = 0x0D0
-# Join output FIFOs for sm4
-mem32[PIO1_BASE | SM0_SHIFTCTRL + 0x1000] = 1 << 31
-sm4.active(1)
-# Start sm0 and sm1 in sync
-mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
+# PIO0_BASE = 0x50200000
+# PIO1_BASE = 0x50300000
+# PIO_CTRL = 0x000
+# SM0_EXECCTRL = 0x0CC
+# SM0_SHIFTCTRL = 0x0D0
+# # Join output FIFOs for sm4
+# mem32[PIO1_BASE | SM0_SHIFTCTRL + 0x1000] = 1 << 31
+# sm4.active(1)
+# # Start sm0 and sm1 in sync
+# mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
+
+p1 = Pin(14, Pin.IN)
+p2 = Pin(15, Pin.IN)
+
+pulsein = pulsedelay(p1, p2)
 
 print("Everything looks good!")
 print("Now entering state of cat-like readiness 😼...")
@@ -93,13 +99,16 @@ print("Now entering state of cat-like readiness 😼...")
 i = 0
 while True:
     i += 1
-    try:
-        # FIXME: Again, should be using a mutex
-        # ('I', [2, 42949, 3, 961372, 1, 1389, 3, 7278]
-        d = EVENTS.pop()
-        process_data(d)
-    except IndexError:
-        if i % 20 == 0:
-            print("No news...")
-    mpu.reset_interrupt()
+    # try:
+        # # FIXME: Again, should be using a mutex
+        # # ('I', [2, 42949, 3, 961372, 1, 1389, 3, 7278]
+        # d = EVENTS.pop()
+        # process_data(d)
+    # except IndexError:
+    #     if i % 20 == 0:
+    #         print("No news...")
+    print(pulsein.get())
+    if i % 20 == 0:
+        print("No news...")
+        mpu.reset_interrupt()
     sleep(1)
