@@ -65,7 +65,7 @@ if START_SIG_SIM is True:
 mpu = MyMpu(bus=0, sda=20, scl=21, ofs=OFS, intr=2, callback=mpu_handler)
 if mpu.passed_self_test:
     print("Ready to start up mpu!")
-    mpu.start()
+    mpu.start(latch_interrupt=False)
 
 # sm2 = StateMachine(2, trigger, freq=100_000_000, in_base=Pin(14), set_base=Pin(16))
 # sm2.active(1)
@@ -101,7 +101,7 @@ print("Now entering state of cat-like readiness 😼...")
 
 i = 0
 while True:
-    i += 1
+    # i += 1
     # try:
         # # FIXME: Again, should be using a mutex
         # # ('I', [2, 42949, 3, 961372, 1, 1389, 3, 7278]
@@ -111,7 +111,8 @@ while True:
     #     if i % 20 == 0:
     #         print("No news...")
     print(pulsein.get())
-    if i % 20 == 0:
-        print("No news...")
-        mpu.reset_interrupt()
+    # if i % 20 == 0:
+    #     print("No news...")
+    #     mpu.reset_interrupt()
+    mpu.reset_interrupt()
     sleep(1)
