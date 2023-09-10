@@ -31,28 +31,24 @@ def PULSE_LOW_DELTA():
 
     # Initialize x to be -1
     set(x, 0)
-    jmp(x_dec, "P2_LOW")
+    jmp(x_dec, "WAIT_FOR_P1_HIGH")
 
-    # Wait for pin2 to be high
-    label("P2_LOW")
-    jmp(pin, "P2_HIGH")
-    jmp("P2_LOW")
-    label("P2_HIGH")
-
-    # wait for pin1 to be high
+    # Wait for pin1 to be high
+    label("WAIT_FOR_P1_HIGH")
     wait(1, pin, 0)
 
-    # wait for pin1 to be low
-    wait(0, pin, 0)
+    label("WAIT_FOR_P2_HIGH")
+    # ok, pin 1 is up; now just dec x until pin2 is high
+    # If pin -- the jmp_pin, which is the p2 arg to pulsedelay() -- is high, then jump to "loopExit"
+    jmp(pin, "loopExit")
+    # Jump to "loopCount" if x is non-zero.  It is -- we set it at the
+    # top.  Irregardlessfully, decrement x.  This is basically a way
+    # to decrement x every time we go through this particular loop.
+    jmp(x_dec, "WAIT_FOR_P2_HIGH")
 
-    # ok we got low just dec x until pin2 is low
-    label("loop")
-    # decX
-    jmp(x_dec, "loopCount")
-    label("loopCount")
-    jmp(pin, "loop")
     # ok we got Pin 2 low! register it by push
-    mov(isr, x)
+    label("loopExit")
+    mov(isr, invert(x))
     push()
     label("End")
     jmp("End")
