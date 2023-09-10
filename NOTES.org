@@ -165,7 +165,72 @@
       state (both on).
     - Not sure that's correct!  Need to re-read my notes & the code.
     - Still -- progress!
-
+** [2023-09-09 Sat]
+- Coming back to this after two weeks off.
+- Current state:
+  - Two piezos.
+    - "Left" one (closer to hammer hit) goes to GPIO 15.
+    - "Right" one (further from hammer hit) goes to GPIO 14.
+    - LEDs attached to both piezo interrupt pins.  I can see them
+      trigger when I give the board a hit.
+      - I can also tap them both w/fingers & see the flash.
+- Still not understanding the times I'm seeing.  Typical with hammer
+  hit on left pin:
+  #+begin_quote
+  Piezo: ON    MPU: OFF   Time: 41.85 microseconds
+  Piezo: ON    MPU: ON    Time: 870.649 microseconds 👈
+  Piezo: ON    MPU: OFF   Time: 261.266 microseconds
+  Piezo: OFF   MPU: OFF   Time: 4.038 microseconds
+  #+end_quote
+  Or:
+  #+begin_quote
+  Piezo: ON    MPU: OFF   Time: 13.241 microseconds
+  Piezo: ON    MPU: OFF   Time: 4.357 microseconds
+  Piezo: ON    MPU: ON    Time: 14.777 microseconds 👈
+  Piezo: ON    MPU: OFF   Time: 151.774 microseconds
+  #+end_quote
+  Or:
+  #+begin_quote
+  Piezo: ON    MPU: OFF   Time: 5.106 microseconds
+  Piezo: ON    MPU: OFF   Time: 3.436 microseconds
+  Piezo: ON    MPU: ON    Time: 3.182 microseconds 👈
+  Piezo: ON    MPU: OFF   Time: 102.246 microseconds
+  #+end_quote
+- Looking over counter.py again, that SM only watches one pin -- pin
+  16, which both trigger SMs set as the result of seeing a change in
+  state.
+  - The assumption is that first one pin, *then the other*, will be
+    triggered -- that the *first* change in pin 16 is from the left
+    pin, and the *second* is from the right pin.
+  - But that's not necessarily true!  The signals from the piezos are
+    *not* latched up, so we could be seeing up/down from the left pin
+    before the right pin triggers.
+    - This could be adjusted by having the triggers sleep after
+      receiving the initial signal.
+- Also, though, I'm not sure I fully understand the time that's being
+  recorded.
+  - Going over counter.py, the clock starts when pin 16 (again, set by
+    either of the triggers on state change) to go high.
+  - When pin 16 goes low, dump state of pin 14/15 into ISR.
+  - Wait for pin 16 to go high again.  At this point, <handwave> dump
+    number of clock cycles into ISR </handwave>.
+  - Set IRQ & block 'til done
+- So:
+  - Ideally, each line is *how long was spent in that state*
+    - dump pin state at start
+    - once there's a change, dump the time
+    - GOTO start
+  - *If* the dump state is done while the first high is still going,
+    you'll have 1,0, [time until next event]
+- Re-reading [[https://forums.raspberrypi.com/viewtopic.php?t=306064&sid=05eb8eb20a34f7d5a7eac4cec91a7999][the original thread]]
+  - There's a post with a *much* simpler approach: a single state
+    machine that watches two pins, and counts the time between each
+    going high.  That's a lot closer to what I'm after.
+  - I suspect this will be a good approach to try.
+    - Hm, you could even imagine setting up one SM to watch hammer
+      pin & set *another* pin when that happens -- which in turn would
+      be the sign for the other 3 SMs to start watching *their* pins
+      and collect *their* time-of-flight details.
 * TODOs
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
