@@ -227,6 +227,25 @@
     machine that watches two pins, and counts the time between each
     going high.  That's a lot closer to what I'm after.
   - I suspect this will be a good approach to try.
+    - HOLY SHIT, THIS WORKS!
+    - Need to verify that the time calculation is correct -- but
+      overall this is a) behaving well, and b) at first glance showing
+      numbers that seem to make sense.
+      - results in thousands of I'll-call-it-microseconds
+      - approximately double if moved to other side of board, as
+        opposed to close to each other
+      - piezo sensitivity adjusted to respond to just about any tap
+      - mpu still as sensitive as ever
+    - Still need to think about clock speed for MPU -- would be
+      interesting to compare that against second piezo.
+      - Hm, tried that and got some unexpected results -- arghh,
+        because p1 was not plugged into anything 🤦
+      - ACTUALLY THIS REALLY WORKS
+        - On same side, ~ 10" apart, ~ 300-500 i'll-call-them-microseconds
+        - On opposite sides, ~ 10x that.
+          - not consistent though -- pressure on sensor seems to make
+            a big difference
+
     - Hm, you could even imagine setting up one SM to watch hammer
       pin & set *another* pin when that happens -- which in turn would
       be the sign for the other 3 SMs to start watching *their* pins
