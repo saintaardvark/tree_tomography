@@ -48,7 +48,7 @@ def PULSE_LOW_DELTA():
 
     # ok we got Pin 2 low! register it by push
     label("loopExit")
-    mov(isr, invert(x))
+    mov(isr, x)
     push()
     label("End")
     jmp("End")
