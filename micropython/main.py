@@ -88,8 +88,11 @@ if mpu.passed_self_test:
 # # Start sm0 and sm1 in sync
 # mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
 
-p1 = Pin(14, Pin.IN)
-p2 = Pin(15, Pin.IN)
+# Currently, I have pin 14 watching the MPU and pin 15 watching the
+# piezo.  I'm hitting the piezo first...so set up the pulsedelay class
+# to reflect that.
+p2 = Pin(14, Pin.IN)
+p1 = Pin(15, Pin.IN)
 
 pulsein = pulsedelay(p1, p2)
 
