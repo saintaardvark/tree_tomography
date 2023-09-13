@@ -27,72 +27,16 @@ from report import process_data
 
 data = array.array("I", [0] * 8)
 start = ticks_ms()
-# This comes from the self-test part of the mput driver.  These are
-# probably bogus values; this was done with the sensor at a random
-# angle.  However, it doesn't seem to hurt it when doing early testing
-# to detect motion.
-OFS = (878, -1385, 1560, 136, -54, -16)
 
 START_SIG_SIM = False
-EVENTS = []
-
-
-def mpu_handler(data: tuple):
-    if "mpu" in globals():
-        print("[{:<16}] {:<10.2f}".format("TEMPERATURE", mpu.celsius))
-        mpu.print_from_data(data)
-
-
-def counter_handler(sm):
-    global start, EVENTS
-    for i in range(8):
-        data[i] = sm.get()
-    # FIXME: I should be using a mutex here: https://docs.openmv.io/library/mutex.html
-    EVENTS.append(data)
-    start = ticks_ms()
 
 
 if START_SIG_SIM is True:
     start_sig_sim()
 
-# TODO: Haven't tried to set the clock faster, but probably should --
-# I think the motion threshold time right now is ~ 1 ms, which is
-# rather slow.
-# TODO: We're setting the handler here for debugging.  This depends on
-# having the MPU interrupt pin connected to both GPIO 2 *and* 14.
-# At some point, we'll want to stop that.
 
-mpu = MyMpu(bus=0, sda=20, scl=21, ofs=OFS, intr=2, callback=mpu_handler)
-if mpu.passed_self_test:
-    print("Ready to start up mpu!")
-    mpu.start(latch_interrupt=False)
-
-# sm2 = StateMachine(2, trigger, freq=100_000_000, in_base=Pin(14), set_base=Pin(16))
-# sm2.active(1)
-# sm3 = StateMachine(3, trigger, freq=100_000_000, in_base=Pin(15), set_base=Pin(16))
-# sm3.active(1)
-
-# sm4 = StateMachine(
-#     4, counter, freq=100_000_000, in_base=Pin(14), jmp_pin=Pin(16), sideset_base=Pin(25)
-# )
-# sm4.irq(counter_handler)
-
-# PIO0_BASE = 0x50200000
-# PIO1_BASE = 0x50300000
-# PIO_CTRL = 0x000
-# SM0_EXECCTRL = 0x0CC
-# SM0_SHIFTCTRL = 0x0D0
-# # Join output FIFOs for sm4
-# mem32[PIO1_BASE | SM0_SHIFTCTRL + 0x1000] = 1 << 31
-# sm4.active(1)
-# # Start sm0 and sm1 in sync
-# mem32[PIO0_BASE | PIO_CTRL + 0x1000] = 0b11
-
-# Currently, I have pin 14 watching the MPU and pin 15 watching the
-# piezo.  I'm hitting the piezo first...so set up the pulsedelay class
-# to reflect that.
-p2 = Pin(14, Pin.IN)
-p1 = Pin(15, Pin.IN)
+p1 = Pin(14, Pin.IN) # Blue LED
+p2 = Pin(15, Pin.IN) # Green LEDl
 
 pulsein = pulsedelay(p1, p2)
 
@@ -101,18 +45,6 @@ print("Now entering state of cat-like readiness 😼...")
 
 i = 0
 while True:
-    # i += 1
-    # try:
-        # # FIXME: Again, should be using a mutex
-        # # ('I', [2, 42949, 3, 961372, 1, 1389, 3, 7278]
-        # d = EVENTS.pop()
-        # process_data(d)
-    # except IndexError:
-    #     if i % 20 == 0:
-    #         print("No news...")
     print(pulsein.get())
-    # if i % 20 == 0:
-    #     print("No news...")
-    #     mpu.reset_interrupt()
-    mpu.reset_interrupt()
     sleep(1)
+
