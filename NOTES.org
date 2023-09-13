@@ -250,6 +250,26 @@
       pin & set *another* pin when that happens -- which in turn would
       be the sign for the other 3 SMs to start watching *their* pins
       and collect *their* time-of-flight details.
+** [2023-09-12 Tue]
+- tried this on sunday and was getting some inconsistent results;
+  *still* getting some inconsistent results, but closer.
+- got a 2x4 now, which I think might avoid some strangeness coming
+  from lots of glued surfaces.
+- have taken out mpu code -- not using it for now.
+- starting to see some results that seem to be roughly proportional to
+  distance
+- Also, though: looked up speed in wood longitudinally -- which is
+  what I think I'm doing -- and that's ~ 2 microseconds/cm in southern
+  pine -- which I'll assume this 2x4 is
+  - which, wow, is not at all what I'm seeing
+    - but surface vs longitudinal?  Need to re-read that paper
+- But!  Drew 5cm markers along length of board, and again: starting to
+  see some roughly proportional results!  Some HUGE outliers that I
+  simply don't understand, but a noticeable clustering!
+  - Very roughly: 50-100 per 5 cm marker
+  - And: there's a knot in the board, and I think I see some diff when
+    the span encompasses that knot!
+  - This is pressing down sensors by hand, knocking with knuckles.
 * TODOs
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
@@ -371,7 +391,9 @@ https://www.youtube.com/watch?v=dAhwgIk0HU4
   - Softwood: 10-12 microseconds/cm
 - So nominal 30cm trunk diameter: 210-360 microseconds
 - which means needing something like 5 Mhz
-- Also: see docs fole
+- Also: see docs folder
+  - Southern pine: ~ 5000-5900 m/s -- which IIUC is ~ 2 microseconds
+    per cm
 
 ** Setting another pin for I2C
 - ESP32 can set any pin for i2c, as long as it's not in use by another function
