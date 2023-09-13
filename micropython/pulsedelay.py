@@ -37,9 +37,10 @@ def PULSE_LOW_DELTA():
     label("WAIT_FOR_P1_HIGH")
     wait(1, pin, 0)
 
-    label("WAIT_FOR_P2_HIGH")
     # ok, pin 1 is up; now just dec x until pin2 is high
-    # If pin -- the jmp_pin, which is the p2 arg to pulsedelay() -- is high, then jump to "loopExit"
+    label("WAIT_FOR_P2_HIGH")
+    # If pin -- the jmp_pin, which is the p2 arg to pulsedelay() -- is
+    # high, then jump to "loopExit"
     jmp(pin, "loopExit")
     # Jump to "loopCount" if x is non-zero.  It is -- we set it at the
     # top.  Irregardlessfully, decrement x.  This is basically a way
@@ -62,7 +63,7 @@ class pulsedelay:
 
     def get(self):
         self.sm.init(
-            PULSE_LOW_DELTA, freq=100000000, in_base=(self.pin1), jmp_pin=(self.pin2)
+            PULSE_LOW_DELTA, freq=100_000_000, in_base=(self.pin1), jmp_pin=(self.pin2)
         )
 
         """ in_base declare the first Pin offset
@@ -70,6 +71,11 @@ class pulsedelay:
         """
         self.sm.active(1)
         # adjust for microsecond value
+        # - 100 MHz == 10 nanoseconds per clock cycle
+        # - there are two instructions in the close loop
+        # - 20 nanoseconds per loop
+        # - 1000 nanoseconds = 1 microsecond
+        # - therefore, divide by 50
         return (0xFFFFFFFF - self.sm.get()) / 50
 
 
