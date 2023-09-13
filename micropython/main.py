@@ -32,6 +32,7 @@ START_SIG_SIM = False
 SLEEPYTIME = 0.5
 
 if START_SIG_SIM is True:
+    print("Starting simulator!")
     start_sig_sim()
 
 
