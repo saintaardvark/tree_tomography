@@ -29,7 +29,7 @@ data = array.array("I", [0] * 8)
 start = ticks_ms()
 
 START_SIG_SIM = False
-
+SLEEPYTIME = 0.5
 
 if START_SIG_SIM is True:
     start_sig_sim()
@@ -45,6 +45,6 @@ print("Now entering state of cat-like readiness 😼...")
 
 i = 0
 while True:
-    print(pulsein.get())
-    sleep(1)
+    print(pulsein.get(), " microseconds")
+    sleep(SLEEPYTIME)
 
