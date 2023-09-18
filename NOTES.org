@@ -270,6 +270,45 @@
   - And: there's a knot in the board, and I think I see some diff when
     the span encompasses that knot!
   - This is pressing down sensors by hand, knocking with knuckles.
+** [2023-09-16 Sat]
+- I'm now clammping the piezos on the 2x4 using small pieces of wood,
+  then a layer of foam, then the sensor.  A couple screws to hold them
+  in place.
+
+- Now have 3 sensors, and I switch manually between them:
+  --A-----------B---------------C---
+  - A: 5cm mark
+  - B: 35 cm mark
+    - A:B: 30 cm
+  - C: 80 cm
+    - A:C 75 cm
+- Seeing interesting & odd results.
+  - Generally, softer hits seem to result in longer transmission times.
+  - Some variation as well in where the board is struck: side vs end,
+    side vs middle of board
+  - Ensuring the clamp is on tight seems to make a big difference in
+    consistency
+  - I seem to get somewhat consistent results by tapping the top of
+    the clamp board
+    - A:B: ~ 600 microseconds
+    - A:C: ~ 1700 microseconds
+    - That's not a bad match for the ratio between the distances
+  - However, that'll still vary -- sometimes ~ 1700 microseconds for
+    A:C, sometimes ~ 600
+  - And tapping the 2x4 directly on either side of the clamp gives
+    *very* different results
+    - A:C: ~ 600-700 microseconds (far side), 1600-1700 microseconds
+      (near side)
+    - A:B: ~ 900 microseconds (far side), 500-600 microseconds (near
+      side)
+    - WTF?
+  - I do seem to be able to find the midway point, by tapping between
+    the sensors & watching for the time to go to zero as I move it
+    along.
+  - There's a knot of wood at ~ the 60cm mark, taking up maybe 15% of
+    the width; if I tap on that, I get notably smaller A:C times:
+    400-500 instead of ~ 1500 microseconds at the same distance
+- Also, *man* these things have delicate wiring.  Broke another one.
 * TODOs
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
