@@ -36,8 +36,8 @@ if START_SIG_SIM is True:
     start_sig_sim()
 
 
-p1 = Pin(14, Pin.IN) # Blue LED
-p2 = Pin(15, Pin.IN) # Green LEDl
+p1 = Pin(14, Pin.IN)  # Blue LED
+p2 = Pin(15, Pin.IN)  # Green LED
 
 pulsein = pulsedelay(p1, p2)
 
@@ -48,4 +48,3 @@ i = 0
 while True:
     print(pulsein.get(), " microseconds")
     sleep(SLEEPYTIME)
-
