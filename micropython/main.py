@@ -36,15 +36,50 @@ if START_SIG_SIM is True:
     start_sig_sim()
 
 
-p1 = Pin(14, Pin.IN)  # Blue LED
-p2 = Pin(15, Pin.IN)  # Green LED
+p1 = Pin(14, Pin.IN)  # Blue LED  -- breadboard: 20
+p2 = Pin(15, Pin.IN)  # Green LED -- breadboard: 19
+p3 = Pin(13, Pin.IN)  # Red LED   -- breadboard: 17
 
-pulsein = pulsedelay(p1, p2)
+switch = Pin(18, Pin.IN, Pin.PULL_DOWN)
+led_1 = Pin(16, Pin.OUT)
+led_2 = Pin(17, Pin.OUT)
+
+pulsein_12 = pulsedelay(p1, p2)  # Time of flight between blue & green
+pulsein_13 = pulsedelay(p1, p3)  # Time of flight between blue & red
+
+which_sm = 12
+led_1.on()
+led_2.off()
+
 
 print("Everything looks good!")
 print("Now entering state of cat-like readiness 😼...")
 
 i = 0
 while True:
-    print(pulsein.get(), " microseconds")
+    if which_sm == 12:
+        print("1->2: ", pulsein_12.get(), " microseconds")
+    elif which_sm == 13:
+        print("1->3: ", pulsein_13.get(), " microseconds")
+    else:
+        print("1->2: ", pulsein_12.get(), " microseconds")
+        print("1->3: ", pulsein_13.get(), " microseconds")
+
     sleep(SLEEPYTIME)
+    print("=-=-=-=-=-=-=-=-=-")
+    if switch.value() == 1:
+        print("Switching!")
+        if which_sm == 12:
+            which_sm = 13
+            led_1.off()
+            led_2.on()
+        elif which_sm == 13:
+            which_sm = 123
+            led_1.on()
+            led_2.on()
+        elif which_sm == 123:
+            which_sm = 12
+            led_1.on()
+            led_2.off()
+
+        print(f"Now looking at {which_sm}")
