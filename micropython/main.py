@@ -39,13 +39,14 @@ if START_SIG_SIM is True:
 p1 = Pin(14, Pin.IN)  # Blue LED  -- breadboard: 20
 p2 = Pin(15, Pin.IN)  # Green LED -- breadboard: 19
 p3 = Pin(13, Pin.IN)  # Red LED   -- breadboard: 17
+p4 = Pin(12, Pin.IN)
 
 switch = Pin(18, Pin.IN, Pin.PULL_DOWN)
 led_1 = Pin(16, Pin.OUT)
 led_2 = Pin(17, Pin.OUT)
 
 pulsein_12 = pulsedelay(p1, p2)  # Time of flight between blue & green
-pulsein_13 = pulsedelay(p1, p3)  # Time of flight between blue & red
+pulsein_13 = pulsedelay(p4, p3)  # Time of flight between blue & red
 
 which_sm = 12
 led_1.on()
