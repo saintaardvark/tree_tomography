@@ -309,6 +309,20 @@
     the width; if I tap on that, I get notably smaller A:C times:
     400-500 instead of ~ 1500 microseconds at the same distance
 - Also, *man* these things have delicate wiring.  Broke another one.
+** [2023-09-23 Sat]
+- Lots of directions for this to go in:
+  - drill holes in wood to compare times
+  - wire up three sensors to compare times
+  - make more permanent board for this
+- For today, will go with wiring up 3 sensors; that way I'll be able
+  to compare times between measurements & see if proportional
+  - Done -- but on the way, got frustrated with the wiring mess &
+    bodged together a board to make it neater
+  - breadboard much neater now
+  - Also added switch to breadboard to switch between showing 1->2
+    time, 1->3 time, or both
+- Measurements are still confusing to me.  
+
 * TODOs
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
