@@ -271,7 +271,7 @@
     the span encompasses that knot!
   - This is pressing down sensors by hand, knocking with knuckles.
 ** [2023-09-16 Sat]
-- I'm now clammping the piezos on the 2x4 using small pieces of wood,
+- I'm now clamping the piezos on the 2x4 using small pieces of wood,
   then a layer of foam, then the sensor.  A couple screws to hold them
   in place.
 
@@ -411,6 +411,7 @@
       crappy Python to something better written -- it's a *real*
       revelation to me to see how this can be possible in the
       mechanical realm.
+  - Fancier version: https://www.iforgeiron.com/topic/66489-da-vinci-helve-hammer/
 - Thought about how I'd get a motor strong enough to lift a hammer.
   Thought of laser printer, eg -- might get a piece of scrap from
   Value Village or some such.
@@ -423,6 +424,8 @@
     MUCH better consistency than I'd had before.  Still some outliers,
     but now it's not unusual to get everything within 20-40
     microseconds.  This is just such an improvement.
+    - like I saw with the ball drop, now that I review my notes -- but
+      easier to repeat
   - Can start by hand cranking it -- but also, a weak motor should
     still be able to lift a wooden spoon
 
