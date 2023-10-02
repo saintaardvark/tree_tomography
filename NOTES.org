@@ -321,7 +321,112 @@
   - breadboard much neater now
   - Also added switch to breadboard to switch between showing 1->2
     time, 1->3 time, or both
-- Measurements are still confusing to me.  
+- Measurements are still confusing to me.  They vary a lot.  Trying to
+  decide between two approaches:
+  - Getting consistent measurements between two piezos (eg, all
+    clustered around some time for a given distance)
+    - eg: A->B is 100, 105, 99, 112, 110, 106 ms
+  - Getting consistent *ratios* of times between *three* piezos, even
+    if the times themselves differ between measurements
+    - eg: (A->B) / (A->C) =~ the same.  (206/410), (199/408),
+      (190)/394), etc etc
+** [2023-09-24 Sun]
+- Tested with Leonardo.  Still very inconsistent results.  Best
+  consistency was seen when we would hammer by hand as best we could
+  -- but still would vary.  Eg:
+  - 440, 457, 438, 445, 463 ms
+    - looks good!
+  - 830, 795, 817
+    - wtf
+  - 448, 453
+    - also wtf
+- We saw this kind of switching back and forth a *lot*.
+  - There are a *lot* of variables here
+    - Behaviour of individual piezos
+      - frayed wiring
+      - threshold adjustment
+      - component variation
+    - Hammering
+      - Force of impact seems to make a difference -- harder == faster
+        times
+        - WHY THO
+      - Place of impact
+        - Directly on the retaining block
+        - Directly on the upper face of the 2x4
+        - On the end of the 2x4
+        - On a nail we put into the end of the 2x4
+      - There's also the placement of the 2x4 itself
+        - Eg: if it's on Leonardo's steel-covered workbench, does that
+          conduct the sound faster & confound results?
+    - The measurement code itself
+      - Let's not forget that I don't know what I'm doing :-)
+- Leonardo recommended focusing on getting measurements between two
+  piezos consistent, then going on from there.
+- Some confusion still with the part of the wiring that isn't off the
+  breadboard yet; got the start/end points wrong until I figured this
+  out.
+** [2023-10-01 Sun]
+- Read the datasheet for the digital comparator used in the piezo
+  components to see if this would be a potential source of timing
+  variation
+  - LM393.
+  - Answer: doesn't look likely.  The datasheet for the TI version
+    says it has reaction time of 1-2 microseconds, and relatively
+    consistent.
+  - These may not be genuine TI components, but the circuit seems
+    relatively simple -- not a lot to change.
+  - In any case, the variations I'm seeing are *wildly* more than that
+    -- 10s of microseconds makes me *extremely* happy; hundreds are
+    not at all uncommon.
+- Try getting the initial impact consistent, as this seems the
+  lowest-hanging fruit.
+  - This'd be best with some kind of apparatus to ensure a consistent
+    impact, and even better if it was automated -- but try manual
+    stuff first to see what might work.
+  - Experimented with holding a hammer a certain distance above the
+    board or the retaining block and letting it drop.  Did this by
+    putting an object on the board (eg, piece of wood); putting the
+    head of the hammer on that; then dragging the hammer backward so
+    that the head fell from its support onto the wood.
+    - Still some inconsistencies with this; may be due to the
+      orientation of the flat face of the hammer on the wood.
+    - Also a bit noisy
+  - Tried rolling a lacrosse ball off a support at a given height
+    right on to the retaining block
+    - This seemed to demonstrate *fairly* consistent results -- eg,
+      a set of 10 drops shows mostly between 720-760 microseconds, but
+      with outliers at 800 and 500 microseconds
+    - It occurs to me that I probably want to start gathering some
+      proper statistics at some point -- mean/median, standard
+      deviation, etc
+** [2023-10-02 Mon]
+- More thinking about how to do repeatable impacts
+- After much digging, came across Da Vinci hammer design.  This is a
+  great video: https://www.youtube.com/watch?v=itSZic2hnPY
+  - I absolutely *love* the use of cardboard & hot glue.  There is
+    something very, very liberating and inspiring about being able to
+    do prototypes like this so easily.
+    - It occurs to me that I'm very much in my comfort zone in this
+      same way when eg going from shell scripting to Python, or from
+      crappy Python to something better written -- it's a *real*
+      revelation to me to see how this can be possible in the
+      mechanical realm.
+- Thought about how I'd get a motor strong enough to lift a hammer.
+  Thought of laser printer, eg -- might get a piece of scrap from
+  Value Village or some such.
+- But then liberated a wooden spoon from the kitchen to test this; it
+  had a hole in the handle for hanging it, which can act as a place to
+  put an axle.  And dang if it didn't work!  I've got the piezos
+  sensitive enough that they pick this up.
+  - Doing some scratch testing, holding the spoon at a fixed spot &
+    letting it fall from *roughly* the same height, showed a much,
+    MUCH better consistency than I'd had before.  Still some outliers,
+    but now it's not unusual to get everything within 20-40
+    microseconds.  This is just such an improvement.
+  - Can start by hand cranking it -- but also, a weak motor should
+    still be able to lift a wooden spoon
+
+
 
 * TODOs
 ** DONE Print out welcome screen at bootup
