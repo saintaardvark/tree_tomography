@@ -428,7 +428,20 @@
       easier to repeat
   - Can start by hand cranking it -- but also, a weak motor should
     still be able to lift a wooden spoon
-
+- Settled on making a hand-cranked version of this out of hot glue,
+  cardboard, and some pens & pencils as axles.
+  - HOLY ****:
+    - 45 cm: 620-630 microseconds
+    - 30 cm: 560-580 microseconds
+  - This is so, SO much more consistent than I expected.  Even seems
+    robust (so far) to swapping connectors between piezo elements.
+  - I don't know what to make of the difference in transit time; I'd
+    expect ~ 50% longer time, but it's only ~ 10% longer.
+- Also: the last few days have been nothing but repeated incredulity
+  that increasing consistency of impact has consistently increased
+  repeatability 🤣
+- Started documenting this here:
+  https://hackaday.io/project/193030-exploring-the-internals-of-trees-with-sound
 
 
 * TODOs
