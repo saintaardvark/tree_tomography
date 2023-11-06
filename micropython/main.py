@@ -36,10 +36,10 @@ if START_SIG_SIM is True:
     start_sig_sim()
 
 
-p1 = Pin(14, Pin.IN)  # Blue LED  -- breadboard: 20
-p2 = Pin(15, Pin.IN)  # Green LED -- breadboard: 19
-p3 = Pin(13, Pin.IN)  # Red LED   -- breadboard: 17
-p4 = Pin(12, Pin.IN)
+p1 = Pin(14, Pin.IN, Pin.PULL_DOWN)  # Blue LED  -- breadboard: 19
+p2 = Pin(15, Pin.IN, Pin.PULL_DOWN)  # Green LED -- breadboard: 20
+p3 = Pin(13, Pin.IN, Pin.PULL_DOWN)  # Red LED   -- breadboard: 17
+p4 = Pin(12, Pin.IN, Pin.PULL_DOWN)  #              breadboard: 16
 
 switch = Pin(18, Pin.IN, Pin.PULL_DOWN)
 led_1 = Pin(16, Pin.OUT)
