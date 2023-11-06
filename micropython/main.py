@@ -36,10 +36,41 @@ if START_SIG_SIM is True:
     start_sig_sim()
 
 
-p1 = Pin(14, Pin.IN, Pin.PULL_DOWN)  # Blue LED  -- breadboard: 19
-p2 = Pin(15, Pin.IN, Pin.PULL_DOWN)  # Green LED -- breadboard: 20
-p3 = Pin(13, Pin.IN, Pin.PULL_DOWN)  # Red LED   -- breadboard: 17
-p4 = Pin(12, Pin.IN, Pin.PULL_DOWN)  #              breadboard: 16
+# Source: https://github.com/dommodnet/Pi-Pico-Pinout-Ascii-Art
+#                         +-----+
+#          +--------------| USB |--------------+
+#          |        GP25  +-----+              |
+#          |1       [LED]                   40 |
+#          | [ ]GP0/U0Rx               VBUS[ ] |
+#          | [ ]GP1/U0Tx               VSYS[ ] |
+#          | [ ]GND                     GND[ ] |
+#          | [ ]GP2                      x3[ ] |
+#          | [ ]GP3                     3V3[ ] |
+#          | [ ]GP4                    AREF[ ] |
+#          | [ ]GP5                 A2/GP28[ ] |
+#          | [ ]GND                     GND[ ] |
+#          | [ ]GP6        +---+    A1/GP27[ ] |
+#          | [ ]GP7        |   |    A0/GP26[ ] |
+#          | [ ]GP8        |   |        RUN[ ] |
+#          | [ ]GP9        +---+       GP22[ ] |
+#          | [ ]GND                     GND[ ] |
+#          | [ ]GP10                   GP21[ ] |
+#          | [ ]GP11         \/        GP20[ ] |
+#          | [ ]GP12        ()()       GP19[ ] |
+#          | [ ]GP13        ()()       GP18[ ] |
+#          | [ ]GND          ()         GND[ ] |
+#          | [ ]GP14                   GP17[ ] |
+#          | [ ]GP15        DEBUG      GP16[ ] |
+#          |20           [ ] [ ] [ ]         21|
+#          |            MISO SCK RST           |
+#          | Pi-Pico                           |
+#          +-----------------------------------+
+
+
+p1 = Pin(15, Pin.IN, Pin.PULL_DOWN)  # Green LED   -- pin 20
+p2 = Pin(14, Pin.IN, Pin.PULL_DOWN)  # Blue LED    -- pin 19
+p3 = Pin(13, Pin.IN, Pin.PULL_DOWN)  # Red LED     -- pin 17
+p4 = Pin(12, Pin.IN, Pin.PULL_DOWN)  # Future work -- pin 16
 
 switch = Pin(18, Pin.IN, Pin.PULL_DOWN)
 led_1 = Pin(16, Pin.OUT)
