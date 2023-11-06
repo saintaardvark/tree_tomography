@@ -5,7 +5,7 @@ DEV?=/dev/ttyACM0
 RSHELL=rshell --port $(DEV)
 MODEM_SPEED=115200
 
-.PHONY: nistall
+.PHONY: istall
 install:
 	$(RSHELL) rsync . /pyboard
 
