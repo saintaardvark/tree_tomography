@@ -48,7 +48,8 @@ led_2 = Pin(17, Pin.OUT)
 pulsein_12 = pulsedelay(p1, p2)  # Time of flight between blue & green
 pulsein_13 = pulsedelay(p4, p3)  # Time of flight between blue & red
 
-which_sm = 123
+# which_sm = 123  # Start by watching 1->2 *and* 1->3
+which_sm = 12  # Start by watching 1->2 only
 led_1.on()
 led_2.off()
 
