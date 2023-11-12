@@ -442,9 +442,89 @@
   repeatability 🤣
 - Started documenting this here:
   https://hackaday.io/project/193030-exploring-the-internals-of-trees-with-sound
-
+** [2023-11-05 Sun]
+- Hammer of science Mk II, Rev B is a big improvement.  Sturdier,
+  nicer handle, just as repeatable.
+  - 45cm: ~ 550 microseconds
+  - 75cm: ~ 830 microseconds
+  - Distance ratio: 1.6:1
+    Time ratio: 1.5:1
+    Hmmmmmm.
+- The delicacy of the piezo sensors continues to concern me.  Need to
+  get a better wire stripper if I'm going to re-solder these things.
+- Have bodged up a prototype board with header pins for the Pico, and
+  terminal blocks to connect to a daughterboard; the daughterboard in
+  turn connects to 3 piezeo sensors, with an LED for each that lights
+  up when there's an impact.
+- Next up:  Get the switch hooked up to pin 24, and turn that into an
+  interrupt/mode switching switch.  (Already kind of doing that -- but
+  the switch has to be pressed during impact.)
+** [2023-11-11 Sat]
+- Thinking about how to start getting useful info here.
+- I'd like to start drilling holes -- measure before, measure
+  after, compare, etc.  But: how much variation is there in
+  measurement?  If I see a difference, is it because I've moved
+  everything around?  Does that change things?
+- I think today:
+  - Collect some measurements
+    - say, 10-20 & avg/std dev/etc
+  - Decide how I want to work with these measurements -- jupyter?
+    Spreadsheet?  plot avg/std dev/etc
+    - Compare between regions
+  - Tear down & re-do as exactly as I can, & check for differences.
+    - Not just absolute measurements, but between regions
+  - If reasonably sure I can get repeatable results, drill some holes
+    - possibly save this for tomorrow w/Leonardo
+- All right, so:
+  - Hammer nestled up to 2x4 at right angle, with outside right edge
+    lined up with outside right edge of 2x4.  Hammer itself falling on
+    100cm mark.
+  - 2x4 on desk.
+  - sensors at 80 cm, 35 cm and 5cm
+  - Will take 20 measurements between each one
+  - Copy-pasta into file, munge into CSV, load into jupyter.
+  - Save file in data/experiments/[date]/[bla].csv
+  - rebooting pico between each run
+  - Just doing connectors 1 & 2 on the board, moving around as needed
+- That was runs 1-4, 20 samples for each section (A->B, A->C, B->C)
+- Also did 5th run, which measured B->C, with hammer falling at 55 cm
+  mark.
+  - Need to start coming up with some kind of standard log for this, maybe...
+- Findings:
+  - A->B segment showed the most consistent time measurements.
+  - A->C and B->C both showed strongly bimodal (is that the right
+    term?) distributions.
+    - This included when the B->C segment was measured on its own --
+      though the actual measurements differed a lot.
+  - Strip plot was the best way to show this.
+    - However, the simple plot of trial vs time showed the
+      back-and-forth -- and in the fifth run, showed, that I got to
+      the point where the times were pretty consistent.  I assume this
+      is a matter of technique.
+  - On that point: I'm assuming the bimodal distribution is a matter
+    of different hammer strokes, despite care.  That's not verified,
+    though.
+  - For runs 1-4, it's very interesting to see that the A->C time
+    seems to be close to A->B + B->C:
+    - Sum of avg A->B + B->C: 661.97 ms
+    - Avg measured A->C:      689.92 ms
+    - That's a 4% diff
+  - The B->C segment showed marked difference in times measured
+    between runs 1-4 (hammer at 100 cm mark) and run 5 (hammer at 55
+    cm mark):
+    - Runs 1-4: cluster at ~ 310 ms and ~ 490 ms
+    - Run 5: cluster at ~ 520 ms and ~ 740 ms
+    - *Nothing* in between -- again, strongly bimodal
+    - Those figures are just from eyeballing the data.
+  - The way of collecting data can be improved.  I was doing 20 runs
+    at a time, copy-pasting output into Emacs, running awk on it,
+    pasting into spreadsheet, saving as csv file, then loading into
+    Pandas.  This is more than a little clumsy.
 
 * TODOs
+** TODO Update wiring diagram to match piezo layout
+** TODO Get button wired up
+** TODO Start drilling holes in wood to see effect
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
 ** DONE Print "Armed..." screen
@@ -539,7 +619,6 @@ CLOSED: [2023-08-26 Sat 14:21]
 ** DONE Try out piezo sensor
 CLOSED: [2023-08-26 Sat 14:21]
 
-** TODO How to get the timer working w/o so many resets?
 ** TODO Go through thread to make sure I've captured everything
 ** TODO Would an ECG cable work for this?
 - https://voltagedivide.com/2017/10/14/psoc-design-and-implementation-of-a-12-lead-portable-ecg/
