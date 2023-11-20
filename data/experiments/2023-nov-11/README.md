@@ -2,7 +2,7 @@
 
 ## Runs 1-4
 
-Hammer: 100 cm
+Hammer: 100 cm; at right angles to board, butted up right against it
 A: 80 cm
 B: 35 cm
 C: 5 cm
@@ -19,11 +19,9 @@ Fourth run: take down, then set up again on desk
 
 ## Runs 5-
 
-Hammer: 55 cm
+Hammer: 55 cm; at right angles to board, butted up right against it
 A: 80 cm
 B: 35 cm
 C: 5 cm
 
 Measurements taken: B->C
-
-Fifth run:
