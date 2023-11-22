@@ -23,7 +23,7 @@ from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
 from counter import counter
 from report import process_data
-
+from display import display
 
 data = array.array("I", [0] * 8)
 start = ticks_ms()
@@ -101,15 +101,14 @@ def main():
     i = 0
     while True:
         if which_sm == 12:
-            print("1->2: ", pulsein_12.get(), " microseconds")
+            display(sm="1->2", tof=pulsein_12.get())
         elif which_sm == 13:
-            print("1->3: ", pulsein_13.get(), " microseconds")
+            display(sm="1->3", tof=pulsein_13.get())
         else:
-            print("1->2: ", pulsein_12.get(), " microseconds")
-            print("1->3: ", pulsein_13.get(), " microseconds")
+            display(sm="1->2", tof=pulsein_12.get())
+            display(sm="1->3", tof=pulsein_13.get())
 
         sleep(SLEEPYTIME)
-        print("=-=-=-=-=-=-=-=-=-")
         if switch.value() == 1:
             print("Switching!")
             if which_sm == 12:
