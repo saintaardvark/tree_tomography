@@ -36,7 +36,7 @@ def maybe_start_simulator(start_sim=START_SIG_SIM):
     """
     Maybe start signal simulator
     """
-    if start_sig is True:
+    if start_sim is True:
         print("Starting simulator!")
         start_sig_sim()
 
@@ -109,6 +109,7 @@ def main():
             display(sm="1->3", tof=pulsein_13.get())
 
         sleep(SLEEPYTIME)
+
         if switch.value() == 1:
             print("Switching!")
             if which_sm == 12:
