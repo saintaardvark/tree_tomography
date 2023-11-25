@@ -241,7 +241,7 @@
       - Hm, tried that and got some unexpected results -- arghh,
         because p1 was not plugged into anything 🤦
       - ACTUALLY THIS REALLY WORKS
-        - On same side, ~ 10" apart, ~ 300-500 i'll-call-them-microseconds
+        - On same side, ~ 10 in apart, ~ 300-500 i'll-call-them-microseconds
         - On opposite sides, ~ 10x that.
           - not consistent though -- pressure on sensor seems to make
             a big difference
@@ -520,7 +520,13 @@
     at a time, copy-pasting output into Emacs, running awk on it,
     pasting into spreadsheet, saving as csv file, then loading into
     Pandas.  This is more than a little clumsy.
-
+** [2023-11-24 Fri]
+- Will use Jupyter notebooks; have added a couple already.
+- Looking to do better logging -- quite clumsy.
+  - Changed default formatter to "csv"....though really it's just bare numbers.
+  - Hacked together util/logger.py: captures from serial & prints out
+    values until keyboard interrupt.  When *that* happens it writes
+    the data to a file, then shows a graph of what you collected.
 * TODOs
 ** TODO Update wiring diagram to match piezo layout
 ** TODO Get button wired up
