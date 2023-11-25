@@ -101,12 +101,12 @@ def main():
     i = 0
     while True:
         if which_sm == 12:
-            display(sm="1->2", tof=pulsein_12.get())
+            display(sm="1->2", tof=pulsein_12.get(), formatter="csv")
         elif which_sm == 13:
-            display(sm="1->3", tof=pulsein_13.get())
+            display(sm="1->3", tof=pulsein_13.get(), formatter="csv")
         else:
-            display(sm="1->2", tof=pulsein_12.get())
-            display(sm="1->3", tof=pulsein_13.get())
+            display(sm="1->2", tof=pulsein_12.get(), formatter="csv")
+            display(sm="1->3", tof=pulsein_13.get(), formatter="csv")
 
         sleep(SLEEPYTIME)
 

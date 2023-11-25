@@ -11,5 +11,8 @@ def display(sm: str, tof: float, formatter: str="pretty"):
     if formatter == "pretty":
         print(f"{sm}: {tof} microseconds")
         print("=-=-=-=-=-=-=-=-=-")
+    elif formatter == "csv":
+        # FIXME: Do I need headers?
+        print(tof)
     else:
         raise NotImplementedError
