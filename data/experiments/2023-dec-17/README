@@ -1,0 +1,37 @@
+Using log for first time.  Sensor at top and bottom, both sides.
+
+Using hammer by holding it on side A by hand, sensor 1 -- travel time to sensor 2.
+
+Have marked places where feet of hammer can be put so that we can try to get consistent measurements.
+
+# First running
+
+Sensor 1 to Sensor 2
+
+2023-12-17_14:16:15.csv -- first run, no holes. 
+2023-12-17_14:18:30.csv -- second run, no holes
+
+Sensor 2 to Sensor 1
+
+2023-12-17_14:24:06.csv -- first run, no holes
+2023-12-17_14:25:33.csv -- second run,no holes.  Removed 4 outliers (hundreds of thousands of microseconds)
+
+# Second run
+
+one hole, 3.25" deep, middle
+
+Sensor 1 to Sensor 2
+
+2023-12-17_14:40:22.csv -- first run, one hole
+2023-12-17_14:41:43.csv -- second run, one hole
+
+Sensor 2 to Sensor 1
+
+2023-12-17_14:43:41.csv -- first run, one hole; removed one outlier at start
+2023-12-17_14:45:00.csv -- second run, one hole
+
+Hole 1" across.  Radius of whole log is 6".  Hole is approx in middle -- so call it a 1.67% increase in difference
+
+Going to drill 2 more holes to make larger diff -- figure should be pprox 11.6% further, which hoepfully will show up with larger time of flight values.
+
+
