@@ -1,8 +1,17 @@
+# December 17, 2023
+
 Using log for first time.  Sensor at top and bottom, both sides.
 
 Using hammer by holding it on side A by hand, sensor 1 -- travel time to sensor 2.
 
-Have marked places where feet of hammer can be put so that we can try to get consistent measurements.
+Have marked places where feet of hammer can be put so that we can try
+to get consistent measurements.
+
+* **NOTE:** I realized afterward that this meant we were likely
+  putting the back end of the hammer on the protective board of the
+  other sensor.  Eg: if we were banging on sensor 1, the back of the
+  hammer was probably resting on sensor 2.  There may have been some
+  mechanical coupling here; it would be good to avoid this next time.
 
 # First running
 
@@ -10,6 +19,8 @@ Sensor 1 to Sensor 2
 
 2023-12-17_14:16:15.csv -- first run, no holes. 
 2023-12-17_14:18:30.csv -- second run, no holes
+
+-> combined: first_run_1_to_2.csv
 
 Sensor 2 to Sensor 1
 
@@ -24,6 +35,8 @@ Sensor 1 to Sensor 2
 
 2023-12-17_14:40:22.csv -- first run, one hole
 2023-12-17_14:41:43.csv -- second run, one hole
+
+-> combined: second_run_1_to_2.csv
 
 Sensor 2 to Sensor 1
 
@@ -44,6 +57,8 @@ Going to drill 2 more holes to make larger diff -- figure should be pprox 11.6% 
 
 2023-12-17_15:07:40.csv -- first run, three holes
 2023-12-17_15:09:55.csv -- second run
+
+-> combined: third_run_1_to_2.csv
 
 2 -> 1
 
