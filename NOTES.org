@@ -527,6 +527,45 @@
   - Hacked together util/logger.py: captures from serial & prints out
     values until keyboard interrupt.  When *that* happens it writes
     the data to a file, then shows a graph of what you collected.
+** [2023-12-20 Wed] - Talk with coworker
+- Q: is "sample size" the right term in stats for what I'm doing, even
+  though I'm taking measurements (as opposed to, say, picking pebbles
+  from a pile of gravel)?
+  - A: Yes:
+- Q: is https://www.omnicalculator.com/statistics/confidence-interval the
+  right formula I should be using?
+  - A: Mostly, yes.  Would suggest you look at the standard deviation
+    formula you're using.  Two kinds:
+    - Population std dev: when you know *all* the possible data
+    - Sample std dev: when you have just a sample
+  - As noted above, it's the latter you want and this is a correct term.
+  - Note that the calculator assumes normal distribution.  Start by
+    making a histogram to verify this.
+- Q: examining graph at
+  https://github.com/saintaardvark/tree_tomography/blob/main/data/experiments/2023-dec-17/tree_tomography-december_17_2023.ipynb,
+  I can see obvious clusters in 3rd column ("three_holes").  Is it
+  acceptable to break those up into columns & analyze them separately?
+  Eg: to break up into clusters, then calculate confidence interval
+  for each one; idea is to see how confident I can be that I'm seeing
+  a real phenomenon, rather than just some outliers
+  - Would need to read more, but intuitively this makes sense.
+  - Keep in mind that if you do this, it won't tell you anything about
+    the nature of the underlying phenomenon.  Eg, it may tell you it's
+    95% confident there's a tight cluster at 1600 microseconds, but
+    won't tell you whether that's a bug or something about the wood.
+- Q: Are there ways to break up the data into clusters automatically?
+  - A: Something like K-means should be good -- turns out you can use
+    it for 1-dimensional data.  It will also give you something called
+    "silhouette score" -- roughly, "how clustered is this data
+    overall", *not* "how good is this particular cluster".
+- Something to consider:  are these measurements changing over time?
+  Eg: look at 3rd ("three_holes") vs 4th column
+  ("three_holes_second_time").  No outliers at 1600 microseconds, 450
+  microseconds in 4th column.  Would that have shown up with more
+  data?  *Is it only showing up in 3rd column with later samples?*
+  IOW, is there something about your test right that (say) is
+  introducing larger measurements over time?     
+
 * TODOs
 ** TODO Update wiring diagram to match piezo layout
 ** TODO Get button wired up
