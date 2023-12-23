@@ -27,6 +27,8 @@ Sensor 2 to Sensor 1
 2023-12-17_14:24:06.csv -- first run, no holes
 2023-12-17_14:25:33.csv -- second run,no holes.  Removed 4 outliers (hundreds of thousands of microseconds)
 
+-> combined: first_run_2_to_1.csv
+
 # Second run
 
 one hole, 3.25" deep, middle
@@ -43,9 +45,11 @@ Sensor 2 to Sensor 1
 2023-12-17_14:43:41.csv -- first run, one hole; removed one outlier at start
 2023-12-17_14:45:00.csv -- second run, one hole
 
+-> combined: second_run_2_to_1.csv 
+
 Hole 1" across.  Radius of whole log is 6".  Hole is approx in middle -- so call it a 1.67% increase in difference
 
-Going to drill 2 more holes to make larger diff -- figure should be pprox 11.6% further, which hoepfully will show up with larger time of flight values.
+Going to drill 2 more holes to make larger diff -- figure should be approx 11.6% further, which hopefully will show up with larger time of flight values.
 
 # Third run
 
@@ -64,6 +68,8 @@ Going to drill 2 more holes to make larger diff -- figure should be pprox 11.6% 
 
 2023-12-17_15:14:30.csv -- first run
 2023-12-17_15:15:26.csv -- second run
+
+-> combined: third_run_2_to_1.csv
 
 # Fourth run
 
