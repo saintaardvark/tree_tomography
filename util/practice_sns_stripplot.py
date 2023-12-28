@@ -32,7 +32,7 @@ class DynamicUpdate:
 
     def on_launch(self):
         # Set up plot
-        self.figure, self.ax = plt.subplots(1, 2)
+        self.figure, self.ax = plt.subplots(1, 3)
         # (self.lines,) = self.ax.plot([], [], "o")
         # Autoscale on unknown axis and known lims on the other
         print(len(self.ax))
@@ -48,6 +48,7 @@ class DynamicUpdate:
         plt.cla()
         sns.stripplot(data=self.ydata, ax=self.ax[0])
         sns.histplot(data=self.ydata, ax=self.ax[1])
+        sns.scatterplot(data=self.ydata, ax=self.ax[2])
         # Need both of these in order to rescale
         for ax in self.ax:
             ax.relim()
