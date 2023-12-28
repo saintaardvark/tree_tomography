@@ -32,7 +32,7 @@ class DynamicUpdate:
 
     def on_launch(self):
         # Set up plot
-        self.figure, self.ax = plt.subplots(2, 1)
+        self.figure, self.ax = plt.subplots(1, 2)
         # (self.lines,) = self.ax.plot([], [], "o")
         # Autoscale on unknown axis and known lims on the other
         print(len(self.ax))
