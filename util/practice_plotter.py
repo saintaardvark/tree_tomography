@@ -12,6 +12,7 @@ import numpy as np
 
 
 class DynamicUpdate:
+    # TODO: We prob don't know the range
     # Suppose we know the x range
     min_x = 0
     max_x = 10
@@ -24,7 +25,7 @@ class DynamicUpdate:
     def update(self, x, y):
         self.xdata.append(x)
         self.ydata.append(y)
-        self.on_running()
+        self.update_graph()
 
     def on_launch(self):
         # Set up plot
@@ -36,7 +37,7 @@ class DynamicUpdate:
         # Other stuff
         self.ax.grid()
 
-    def on_running(self):
+    def update_graph(self):
         # Update data (with the new _and_ the old points)
         self.lines.set_xdata(self.xdata)
         self.lines.set_ydata(self.ydata)
@@ -47,20 +48,13 @@ class DynamicUpdate:
         self.figure.canvas.draw()
         self.figure.canvas.flush_events()
 
-    # Example
-    def __call__(self):
-        for x in np.arange(0, 10, 0.5):
-            xdata.append(x)
-            ydata.append(np.exp(-(x**2)) + 10 * np.exp(-((x - 7) ** 2)))
-            self.on_running(xdata, ydata)
-            time.sleep(1)
-        return xdata, ydata
 
 
 def main():
     """
     Main entry point
     """
+    # Enable pyplot interactive mode:
     plt.ion()
     d = DynamicUpdate()
 
