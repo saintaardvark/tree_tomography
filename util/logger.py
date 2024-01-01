@@ -51,6 +51,40 @@ def graph(data):
     plt.show()
 
 
+class DynamicUpdate():
+
+    def __init__(self):
+        self.on_launch()
+
+    def on_launch(self):
+        # Set up plot/
+        self.figure, self.ax = plt.subplots(1, 4)
+        # (self.lines,) = self.ax.plot([], [], "o")
+        # Autoscale on unknown axis and known lims on the other
+        print(len(self.ax))
+        for ax in self.ax:
+            ax.set_autoscaley_on(True)
+            # ax.set_xlim(self.min_x, self.max_x)
+            ax.grid()
+
+    def update_graph(self, data):
+        # Update data (with the new _and_ the old points)
+        # self.lines.set_xdata(self.xdata)
+        # self.lines.set_ydata(self.ydata)
+        plt.cla()
+        sns.stripplot(data=data, ax=self.ax[0])
+        sns.scatterplot(data=data, ax=self.ax[1])
+        sns.boxplot(data=data, ax=self.ax[2])
+        sns.histplot(data=data, ax=self.ax[3])
+        # Need both of these in order to rescale
+        for ax in self.ax:
+            ax.relim()
+            ax.autoscale_view()
+        # We need to draw *and* flush
+        self.figure.canvas.draw()
+        self.figure.canvas.flush_events()
+
+
 def log_serial(ser):
     """
     Do the actual logging.
@@ -60,11 +94,14 @@ def log_serial(ser):
     - every line is a floating point number
 
     """
+    d = DynamicUpdate()
     while True:
         ser_bytes = ser.readline()
         t = float(ser_bytes.decode("utf-8").rstrip("\r\n"))
         print(t)
         DATA.append(t)
+        if len(DATA) % 10 == 0:
+            d.update_graph(DATA)
 
 
 def main():
@@ -73,6 +110,7 @@ def main():
     """
     ser = serial.Serial("/dev/ttyACM0", baudrate=115200)
     try:
+        plt.ion()
         log_serial(ser)
     except KeyboardInterrupt:
         save(DATA)
