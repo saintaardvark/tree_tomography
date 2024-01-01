@@ -2,9 +2,6 @@
 
 # https://stackoverflow.com/questions/10944621/dynamically-updating-plot-in-matplotlib
 
-# This uses Seaborn's stripplot, which is something I want to do.  But
-# the update isn't working.
-
 import sys
 import time
 
@@ -47,9 +44,9 @@ class DynamicUpdate:
         # self.lines.set_ydata(self.ydata)
         plt.cla()
         sns.stripplot(data=self.ydata, ax=self.ax[0])
-        sns.histplot(data=self.ydata, ax=self.ax[1])
+        sns.scatterplot(data=self.ydata, ax=self.ax[1])
         sns.boxplot(data=self.ydata, ax=self.ax[2])
-        sns.scatterplot(data=self.ydata, ax=self.ax[3])
+        sns.histplot(data=self.ydata, ax=self.ax[3])
         # Need both of these in order to rescale
         for ax in self.ax:
             ax.relim()
