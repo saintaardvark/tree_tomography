@@ -567,9 +567,15 @@
   introducing larger measurements over time?     
 
 * TODOs
+** TODO Measure from more than one sensor at a time
+** TODO How firm a contact w/wood surface do we need? 
+** TODO Why does speed depend on strength of impact?
+** TODO Start measuring all around trunk/log
+** TODO Analyze data from sensors all around
 ** TODO Update wiring diagram to match piezo layout
 ** TODO Get button wired up
-** TODO Start drilling holes in wood to see effect
+** DONE Start drilling holes in wood to see effect
+CLOSED: [2024-01-03 Wed 15:52]
 ** DONE Print out welcome screen at bootup
 CLOSED: [2023-08-05 Sat 06:00]
 ** DONE Print "Armed..." screen
