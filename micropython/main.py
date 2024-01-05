@@ -30,6 +30,7 @@ start = ticks_ms()
 START_SIG_SIM = False
 SLEEPYTIME = 0.5
 
+DEBUG = False
 
 def maybe_start_simulator(start_sim=START_SIG_SIM):
     """
@@ -93,6 +94,22 @@ def main():
     led_1.on()
     led_2.off()
 
+    DEBUG = True
+    if DEBUG:
+        print("Debug mode on!")
+        formatter = "pretty"
+        import sys
+        print("Which pins do you want to watch?  (12, 13, 123, or NODEBUG to turn off debug mode)")
+        which_sm = sys.stdin.readline().strip("\n")
+        if which_sm == "NODEBUG":
+            print("No debug mode it is!")
+            which_sm = 12
+            formatter = "csv"
+        else:
+            which_sm = int(which_sm)
+        print(f"{which_sm} it is!")
+    else:
+        formatter = "csv"
 
     print("Everything looks good!")
     print("Now entering state of cat-like readiness 😼...")
@@ -100,12 +117,12 @@ def main():
     i = 0
     while True:
         if which_sm == 12:
-            display(sm="1->2", tof=pulsein_12.get(), formatter="csv")
+            display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
         elif which_sm == 13:
-            display(sm="1->3", tof=pulsein_13.get(), formatter="csv")
+            display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
         else:
-            display(sm="1->2", tof=pulsein_12.get(), formatter="csv")
-            display(sm="1->3", tof=pulsein_13.get(), formatter="csv")
+            display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
+            display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
 
         sleep(SLEEPYTIME)
 
