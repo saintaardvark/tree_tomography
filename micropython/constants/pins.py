@@ -9,3 +9,4 @@ switch = Pin(18, Pin.IN, Pin.PULL_DOWN)  # pin 24
 led_1 = Pin(16, Pin.OUT)
 led_2 = Pin(17, Pin.OUT)
 
+

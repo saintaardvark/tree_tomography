@@ -18,7 +18,8 @@ from utime import sleep
 import array
 
 from pulsedelay import pulsedelay
-from constants import p1, p2, p3, p4, switch, led_1, led_2
+from constants.pins import p1, p2, p3, p4, switch, led_1, led_2
+from constants.headers import DEFAULT_HEADERS
 from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
 from counter import counter
@@ -30,7 +31,6 @@ start = ticks_ms()
 
 START_SIG_SIM = False
 SLEEPYTIME = 0.5
-
 DEBUG = False
 
 
@@ -82,6 +82,16 @@ def maybe_start_simulator(start_sim=START_SIG_SIM):
 #          +-----------------------------------+
 
 
+def maybe_print_headers(headers):
+    """
+    Print headers if it looks like there's a request for them.
+
+    TODO:
+    """
+    m = input()
+    print(headers)
+
+
 def main():
     """
     Main entry point
@@ -127,7 +137,9 @@ def main():
 
     i = 0
     # TODO: Don't hardcode header
-    print("1->2,1->3")
+
+    # Wait to see if we have a request for headers
+    maybe_print_headers(headers=DEFAULT_HEADERS)
     while True:
         if which_sm == 12:
             pulsein_12.activate()
@@ -140,8 +152,7 @@ def main():
         else:
             pulsein_12.activate()
             pulsein_13.activate()
-            msg = {"1->2": pulsein_12.get(),
-                   "1->3": pulsein_13.get()}
+            msg = {"1->2": pulsein_12.get(), "1->3": pulsein_13.get()}
             display(msg=msg, formatter=formatter)
 
         sleep(SLEEPYTIME)

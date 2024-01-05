@@ -4,6 +4,7 @@
 
 from datetime import datetime
 from io import StringIO
+import pathlib
 import serial
 import sys
 from time import sleep
@@ -14,8 +15,10 @@ import matplotlib as mpl
 import numpy as np
 import seaborn as sns
 
-DATA = []
+filepath = pathlib.Path(__file__).parent.resolve()
+sys.path.append(str(filepath / "../micropython/constants"))
 
+from headers import DEFAULT_HEADERS
 
 def save(d, filename):
     """
@@ -109,7 +112,7 @@ class DynamicUpdate:
         print("FIXME: Made it here")
 
 
-def log_serial(ser, d):
+def log_serial(ser, d, headers=DEFAULT_HEADERS):
     """
     Do the actual logging.
 
@@ -120,25 +123,21 @@ def log_serial(ser, d):
     Params:
       ser: serial object suitable for reading from
       d: DynamicUpdate object
-
+      default_headers: default headers for the CSV values
     """
-    x = -1
+    x = 0
     header = ""
     print("Waiting for serial...")
     while True:
+        ser.send_break()
+        ser.write(b"\x04")  # send ^D (EOT)
         ser_bytes = ser.readline()
         line = ser_bytes.decode("utf-8").rstrip("\r\n")
         print(line)
-        if x == -1:
-            print("save header")
-            header = line
-            x += 1
-            continue
-        elif x == 0:
+        if x == 0:
             print("First data line; now make the dataframe")
-            first_line = f"{header}\n{line}"
+            first_line = f"{headers}\n{line}"
             d.df = pd.read_csv(StringIO(first_line))
-            print(d.df)
             x += 1
             continue
         # Made it here, we must have a dataframe already
@@ -146,8 +145,6 @@ def log_serial(ser, d):
             [d.df, pd.read_csv(StringIO(line), names=d.df.columns)],
             ignore_index=True,
         )
-        print(f"[FIXME] {len(d.df)=}")
-        print(f"[FIXME] {(len(d.df) % 10)=}")
         if len(d.df) % 10 == 0:
             print("Updating graph!")
             d.update_graph()
@@ -158,8 +155,6 @@ def main():
     Main entry point
     """
     ser = serial.Serial("/dev/ttyACM0", baudrate=115200)
-    ser.send_break()
-    ser.write(b"\x04")  # send ^D (EOT)
     # sleep(0.1)
     d = DynamicUpdate()
     filename = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
