@@ -7,7 +7,7 @@ MODEM_SPEED=115200
 
 .PHONY: install
 install:
-	$(RSHELL) rsync . /pyboard
+	$(RSHELL) rsync --mirror . /pyboard
 
 
 .PHONY: repl

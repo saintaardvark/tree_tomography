@@ -17,7 +17,6 @@ from time import ticks_ms, ticks_diff
 from utime import sleep
 import array
 
-from my_mpu import MyMpu
 from pulsedelay import pulsedelay
 from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
