@@ -1,18 +1,23 @@
-def display(sm: str, tof: float, formatter: str="pretty"):
+def display(msg: dict, formatter: str = "pretty"):
     """
     Print out readings.
 
     Args:
-      sm (str): sensor pair; eg, '1->2'.
-      tof (float): time of flight in microseconds
-      formatter (str): type of display.  Default is 'pretty';
-      will have 'csv' in the future.
+      msg (dict): key, val pairs of reading_name, time of flight in microseconds
+      formatter (str): type of display.  Default is 'pretty'.  If CSV, format as CSV.
+
     """
     if formatter == "pretty":
-        print(f"{sm}: {tof} microseconds")
-        print("=-=-=-=-=-=-=-=-=-")
+        for k in msg:
+            print(f"{k}: {msg[k]} microseconds")
+            print("=-=-=-=-=-=-=-=-=-")
     elif formatter == "csv":
         # FIXME: Do I need headers?
-        print(tof)
+        line = ""
+        for k in msg:
+            line += str(msg[k]) + ","
+
+        # Remove trailing comma
+        print(line.rstrip(","))
     else:
         raise NotImplementedError

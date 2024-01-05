@@ -126,18 +126,23 @@ def main():
     debug("Now entering state of cat-like readiness 😼...")
 
     i = 0
+    # TODO: Don't hardcode header
+    print("1->2,1->3")
     while True:
         if which_sm == 12:
             pulsein_12.activate()
-            display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
+            msg = {"1->2": pulsein_12.get()}
+            display(msg=msg, formatter=formatter)
         elif which_sm == 13:
             pulsein_13.activate()
-            display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
+            msg = {"1->3": pulsein_13.get()}
+            display(msg=msg, formatter=formatter)
         else:
             pulsein_12.activate()
             pulsein_13.activate()
-            display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
-            display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
+            msg = {"1->2": pulsein_12.get(),
+                   "1->3": pulsein_13.get()}
+            display(msg=msg, formatter=formatter)
 
         sleep(SLEEPYTIME)
 
