@@ -18,6 +18,7 @@ from utime import sleep
 import array
 
 from pulsedelay import pulsedelay
+from constants import p1, p2, p3, p4, switch, led_1, led_2
 from simulation import in_sig_sim, start_sig_sim
 from trigger import trigger
 from counter import counter
@@ -79,17 +80,14 @@ def main():
     """
     maybe_start_simulator()
 
-    p1 = Pin(15, Pin.IN, Pin.PULL_DOWN)  # Green LED   -- pin 20
-    p2 = Pin(14, Pin.IN, Pin.PULL_DOWN)  # Blue LED    -- pin 19
-    p3 = Pin(13, Pin.IN, Pin.PULL_DOWN)  # Red LED     -- pin 17
-    p4 = Pin(12, Pin.IN, Pin.PULL_DOWN)  # Future work -- pin 16
-
-    switch = Pin(18, Pin.IN, Pin.PULL_DOWN)  # pin 24
-    led_1 = Pin(16, Pin.OUT)
-    led_2 = Pin(17, Pin.OUT)
-
-    pulsein_12 = pulsedelay(p1, p2)  # Time of flight between blue & green
-    pulsein_13 = pulsedelay(p1, p3)  # Time of flight between blue & red
+    pulsein_12 = pulsedelay(
+        pin1=p1, pin2=p2, stateMachine=0
+    )  # Time of flight between blue & green
+    pulsein_13 = pulsedelay(
+        pin1=p1, pin2=p3, stateMachine=1
+    )  # Time of flight between blue & red
+    print(pulsein_12.sm)
+    print(pulsein_13.sm)
 
     which_sm = 123  # Start by watching 1->2 *and* 1->3
     # which_sm = 12  # Start by watching 1->2 only
