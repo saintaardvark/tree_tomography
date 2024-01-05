@@ -34,6 +34,14 @@ SLEEPYTIME = 0.5
 DEBUG = False
 
 
+def debug(msg):
+    """
+    Simple debugger
+    """
+    if DEBUG:
+        print(f"[DEBUG] {msg}")
+
+
 def maybe_start_simulator(start_sim=START_SIG_SIM):
     """
     Maybe start signal simulator
@@ -86,8 +94,8 @@ def main():
     pulsein_13 = pulsedelay(
         pin1=p1, pin2=p3, stateMachine=1
     )  # Time of flight between blue & red
-    print(pulsein_12.sm)
-    print(pulsein_13.sm)
+    debug(pulsein_12.sm)
+    debug(pulsein_13.sm)
 
     which_sm = 123  # Start by watching 1->2 *and* 1->3
     # which_sm = 12  # Start by watching 1->2 only
@@ -96,7 +104,7 @@ def main():
 
     DEBUG = True
     if DEBUG:
-        print("Debug mode on!")
+        debug("Debug mode on!")
         formatter = "pretty"
         import sys
 
@@ -105,35 +113,28 @@ def main():
         )
         which_sm = sys.stdin.readline().strip("\n")
         if which_sm == "NODEBUG":
-            print("No debug mode it is!")
+            debug("No debug mode it is!")
             which_sm = 12
             formatter = "csv"
         else:
             which_sm = int(which_sm)
-        print(f"{which_sm} it is!")
+        debug(f"{which_sm} it is!")
     else:
         formatter = "csv"
 
-    print("Everything looks good!")
-    print("Now entering state of cat-like readiness 😼...")
+    debug("Everything looks good!")
+    debug("Now entering state of cat-like readiness 😼...")
 
     i = 0
     while True:
         if which_sm == 12:
-            print("This case")
-            print("Activating...")
             pulsein_12.activate()
             display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
         elif which_sm == 13:
-            print("That case")
-            print("Activating...")
             pulsein_13.activate()
             display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
         else:
-            print("The other case")
-            print("Activating 12...")
             pulsein_12.activate()
-            print("Activating 13...")
             pulsein_13.activate()
             display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
             display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
