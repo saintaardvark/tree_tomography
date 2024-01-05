@@ -2,6 +2,7 @@
 
 # https://stackoverflow.com/questions/10944621/dynamically-updating-plot-in-matplotlib
 
+from io import StringIO
 import sys
 import time
 
@@ -19,8 +20,8 @@ class DynamicUpdate:
     max_x = 10
 
     def __init__(self):
-        self.xdata = []
-        self.ydata = []
+        self.df = []
+        # self.ydata = []
         self.on_launch()
 
     def update(self, x, y):
@@ -35,7 +36,7 @@ class DynamicUpdate:
         print(len(self.ax))
         for ax in self.ax:
             ax.set_autoscaley_on(True)
-            ax.set_xlim(self.min_x, self.max_x)
+            # ax.set_xlim(self.min_x, self.max_x)
             ax.grid()
 
     def update_graph(self):
@@ -43,10 +44,10 @@ class DynamicUpdate:
         # self.lines.set_xdata(self.xdata)
         # self.lines.set_ydata(self.ydata)
         plt.cla()
-        sns.stripplot(data=self.ydata, ax=self.ax[0])
-        sns.scatterplot(data=self.ydata, ax=self.ax[1])
-        sns.boxplot(data=self.ydata, ax=self.ax[2])
-        sns.histplot(data=self.ydata, ax=self.ax[3])
+        sns.stripplot(data=self.df, ax=self.ax[0])
+        sns.scatterplot(data=self.df, ax=self.ax[1], legend=False)
+        sns.boxplot(data=self.df, ax=self.ax[2])
+        sns.histplot(data=self.df, ax=self.ax[3])
         # Need both of these in order to rescale
         for ax in self.ax:
             ax.relim()
@@ -65,14 +66,36 @@ def main():
     d = DynamicUpdate()
 
     while True:
-        x = 0
+        x = -1
         for line in sys.stdin:
-            print(line, end="")
-            y = float(line)
-            d.update(x, y)
+            if x == -1:
+                print("save header")
+                header = line
+                x += 1
+                continue
+            elif x == 0:
+                print("First data line; now make the dataframe")
+                first_line = header + line
+                d.df = pd.read_csv(StringIO(first_line))
+                print(d.df)
+                x += 1
+                continue
+            # Made it here, must not be zeroth or first line
+            # df = pd.concat([df, pd.read_csv(StringIO(line), header=0)], ignore_index=True, axis=0)
+            d.df = pd.concat(
+                [d.df, pd.read_csv(StringIO(line), names=d.df.columns)],
+                ignore_index=True,
+            )
+
+            # print(line, end="")
+            # vals = line.strip(",\n").split(",")
+            # print(vals)
+            # y = float(line)
+            # d.update(x, y)
             x += 1
-            if x % 10 == 0:
+            if x % 100 == 0:
                 d.update_graph()
+                print(d.df)
 
 
 if __name__ == "__main__":
