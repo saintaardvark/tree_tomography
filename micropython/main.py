@@ -32,6 +32,7 @@ SLEEPYTIME = 0.5
 
 DEBUG = False
 
+
 def maybe_start_simulator(start_sim=START_SIG_SIM):
     """
     Maybe start signal simulator
@@ -71,6 +72,7 @@ def maybe_start_simulator(start_sim=START_SIG_SIM):
 #          | Pi-Pico                           |
 #          +-----------------------------------+
 
+
 def main():
     """
     Main entry point
@@ -89,8 +91,8 @@ def main():
     pulsein_12 = pulsedelay(p1, p2)  # Time of flight between blue & green
     pulsein_13 = pulsedelay(p1, p3)  # Time of flight between blue & red
 
-    # which_sm = 123  # Start by watching 1->2 *and* 1->3
-    which_sm = 12  # Start by watching 1->2 only
+    which_sm = 123  # Start by watching 1->2 *and* 1->3
+    # which_sm = 12  # Start by watching 1->2 only
     led_1.on()
     led_2.off()
 
@@ -99,7 +101,10 @@ def main():
         print("Debug mode on!")
         formatter = "pretty"
         import sys
-        print("Which pins do you want to watch?  (12, 13, 123, or NODEBUG to turn off debug mode)")
+
+        print(
+            "Which pins do you want to watch?  (12, 13, 123, or NODEBUG to turn off debug mode)"
+        )
         which_sm = sys.stdin.readline().strip("\n")
         if which_sm == "NODEBUG":
             print("No debug mode it is!")
@@ -146,5 +151,6 @@ def main():
 
             print(f"Now looking at {which_sm}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
