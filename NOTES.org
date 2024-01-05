@@ -142,7 +142,7 @@
   - *WOW*, the wiring on this is delicate.  Broke one already.  Tried
     to re-solder it, but no luck.
 - This mostly worked today...for a while.
-  - Ihad piezo on one side of board, mpu on other. 55cm distance
+  - I  had piezo on one side of board, mpu on other. 55cm distance
     between them -- so anywhere from 550 to 660 microseconds.
     - I was getting quite consistent times of ~ 1000-1300 microseconds
       -- about double, but not orders of magnitude off.  As well,
@@ -567,7 +567,24 @@
   introducing larger measurements over time?     
 ** [2024-01-04 Thu]
 - Start trying to get measurements from more than two sensors at a time
-
+- Confirmed what I ;remember of old behaviour:
+  - can measure 1->2 *or* 1->3 successfully
+  - but if measure both, I get a reasonable value for 1->2, and
+    straight zeroes for 1-3
+- Looking at pulsedelay.py:
+  - Had been specifying wrong pin for 1->3.  Fixed; now watching pin
+    15 to pin 13.  But still same behaviour as before.
+  - I had not been specifying different state machines -- fixed.  But
+    still same behaviour as before.
+  - Realized I was only calling sm.activate() in .get() -- meaning,
+    the SM wasn't activated until I actually *looked* for a value,
+    rather than having it running in the background until I could
+    collect values.  Fixed, I think: now activating in main() loop.
+    - But no values coming back?  Nothing printed out -- so presumably
+      blocked in pulsein_12.get() (or _13.get())
+    - Hm -- forgot that sm.init() was being called in sm.get().  Was
+      that it?
+      - HAHAHA, yes!  🥳  Now I get timing from both
 * TODOs
 ** TODO Measure from more than two sensors at a time
 ** TODO How firm a contact w/wood surface do we need? 
