@@ -102,7 +102,7 @@ def main():
     led_1.on()
     led_2.off()
 
-    DEBUG = True
+    # DEBUG = True
     if DEBUG:
         debug("Debug mode on!")
         formatter = "pretty"
