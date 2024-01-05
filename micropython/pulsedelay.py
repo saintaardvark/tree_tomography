@@ -61,15 +61,16 @@ class pulsedelay:
         self.pin2 = pin2
         self.sm = rp2.StateMachine(stateMachine)
 
-    def get(self):
+    def activate(self):
         self.sm.init(
             PULSE_LOW_DELTA, freq=100_000_000, in_base=(self.pin1), jmp_pin=(self.pin2)
         )
+        self.sm.active(1)
 
+    def get(self):
         """ in_base declare the first Pin offset
             jmp_pin declare the pin to use for jmp (this is not an offset)
         """
-        self.sm.active(1)
         # adjust for microsecond value
         # - 100 MHz == 10 nanoseconds per clock cycle
         # - there are two instructions in the close loop

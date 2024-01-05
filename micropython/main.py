@@ -121,12 +121,20 @@ def main():
     while True:
         if which_sm == 12:
             print("This case")
+            print("Activating...")
+            pulsein_12.activate()
             display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
         elif which_sm == 13:
             print("That case")
+            print("Activating...")
+            pulsein_13.activate()
             display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
         else:
             print("The other case")
+            print("Activating 12...")
+            pulsein_12.activate()
+            print("Activating 13...")
+            pulsein_13.activate()
             display(sm="1->2", tof=pulsein_12.get(), formatter=formatter)
             display(sm="1->3", tof=pulsein_13.get(), formatter=formatter)
 
