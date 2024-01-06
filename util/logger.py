@@ -78,7 +78,6 @@ def log_serial(ser, d, headers=DEFAULT_HEADERS):
       default_headers: default headers for the CSV values
     """
     x = 0
-    header = ""
     print("Waiting for serial...")
     while True:
         ser.send_break()
