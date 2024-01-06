@@ -20,6 +20,9 @@ sys.path.append(str(filepath / "../micropython/constants"))
 
 from headers import DEFAULT_HEADERS
 
+from graph.dynamic_update import DynamicUpdate
+
+
 def save(d, filename):
     """
     Save data in some way
@@ -59,40 +62,6 @@ def graph(d, filename):
     sns.boxplot(data=d.df, ax=ax[2])
     plt.savefig(f"{filename}.png")
     plt.show()
-
-
-class DynamicUpdate:
-    def __init__(self):
-        self.df = None
-        self.on_launch()
-
-    def on_launch(self):
-        # Set up plot/
-        self.figure, self.ax = plt.subplots(1, 4)
-        # (self.lines,) = self.ax.plot([], [], "o")
-        # Autoscale on unknown axis and known lims on the other
-        print(len(self.ax))
-        for ax in self.ax:
-            ax.set_autoscaley_on(True)
-            # ax.set_xlim(self.min_x, self.max_x)
-            ax.grid()
-
-    def update_graph(self):
-        # Update data (with the new _and_ the old points)
-        # self.lines.set_xdata(self.xdata)
-        # self.lines.set_ydata(self.ydata)
-        plt.cla()
-        sns.stripplot(data=self.df, ax=self.ax[0])
-        sns.scatterplot(data=self.df, ax=self.ax[1])
-        sns.boxplot(data=self.df, ax=self.ax[2])
-        sns.histplot(data=self.df, ax=self.ax[3])
-        # Need both of these in order to rescale
-        for ax in self.ax:
-            ax.relim()
-            ax.autoscale_view()
-        # We need to draw *and* flush
-        self.figure.canvas.draw()
-        self.figure.canvas.flush_events()
 
 
 def log_serial(ser, d, headers=DEFAULT_HEADERS):
@@ -143,7 +112,6 @@ def main():
     filename = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
     try:
-        plt.ion()
         log_serial(ser, d)
     except KeyboardInterrupt:
         save(d, filename)

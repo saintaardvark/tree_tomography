@@ -20,7 +20,6 @@ def main():
     Main entry point
     """
     # Enable pyplot interactive mode:
-    plt.ion()
     d = DynamicUpdate()
 
     while True:

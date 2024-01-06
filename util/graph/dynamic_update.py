@@ -21,6 +21,7 @@ class DynamicUpdate:
         self.ydata.append(y)
 
     def on_launch(self):
+        plt.ion()
         # Set up plot
         self.figure, self.ax = plt.subplots(1, 4)
         # (self.lines,) = self.ax.plot([], [], "o")
