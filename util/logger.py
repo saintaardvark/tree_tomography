@@ -28,7 +28,6 @@ def save(d, filename):
       d: DynamicUpdate object
       filename: filename to save, no extension
     """
-    # FIXME: Not really CSV
     d.df.to_csv(f"{filename}.csv")
     print(f"Data file: {filename}.csv")
 
@@ -79,37 +78,21 @@ class DynamicUpdate:
             ax.grid()
 
     def update_graph(self):
-        print("FIXME: Made it here 1")
         # Update data (with the new _and_ the old points)
         # self.lines.set_xdata(self.xdata)
         # self.lines.set_ydata(self.ydata)
         plt.cla()
-        print("FIXME: Made it here 2")
-
         sns.stripplot(data=self.df, ax=self.ax[0])
-        print("FIXME: Made it here 3")
-
         sns.scatterplot(data=self.df, ax=self.ax[1])
-        print("FIXME: Made it here 4")
-
         sns.boxplot(data=self.df, ax=self.ax[2])
-        print("FIXME: Made it here 5")
-
         sns.histplot(data=self.df, ax=self.ax[3])
-        print("FIXME: Made it here 6")
-
         # Need both of these in order to rescale
         for ax in self.ax:
-            print("FIXME: Made it here 7")
             ax.relim()
-            print("FIXME: Made it here 8")
             ax.autoscale_view()
         # We need to draw *and* flush
         self.figure.canvas.draw()
-        print("FIXME: Made it here 9")
-
         self.figure.canvas.flush_events()
-        print("FIXME: Made it here")
 
 
 def log_serial(ser, d, headers=DEFAULT_HEADERS):
