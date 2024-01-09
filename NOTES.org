@@ -585,8 +585,35 @@
     - Hm -- forgot that sm.init() was being called in sm.get().  Was
       that it?
       - HAHAHA, yes!  🥳  Now I get timing from both
+** [2024-01-05 Fri]
+- Collecting more data
+- Now got three points on circumference of log; see images in data/experiments/2024-Jan-05.
+- Got one set of 50 data points, another of 250.
+  - Notebook in that directory with basic graphing.
+  - Some filtering, though still manual:
+    - drop massive outlier in first data set
+    - drop any row with zero in second
+    - Note about needing to look at
+      https://stackoverflow.com/a/69001342/1958301 for better/more
+      scalable approaches.
+  - Despite distance being the same, 1->3 (which has to pass around
+    the hole we've drilled) is consistently longer.
+    - Ratio of 1->3 : 1->2  is about 1.25x.
+    - Still seeing bimodal distribution in measurement times, but
+      ratio is still consistent for those as well.
+    - Very roughly: straight shot distance for 1->3 would be 16.5 cm
+      or so, and bank shot (having to go around the hole) would be
+      something like 17.25 cm -- about a 4.5% increase.
+- Able to filter outliers when graphing in logger, but still save them
+  in CSV file.
 * TODOs
-** TODO Measure from more than two sensors at a time
+** DONE Measure from more than two sensors at a time
+CLOSED: [2024-01-05 Fri 12:44]
+** DONE Have headers printed out better in logger
+CLOSED: [2024-01-05 Fri 16:49]
+** DONE Figure out why interactive logger stopped working
+CLOSED: [2024-01-05 Fri 16:49] 
+** TODO Have logger.py use same filter-outliers code in final graph as it does in dynamic graph
 ** TODO How firm a contact w/wood surface do we need? 
 ** TODO Why does speed depend on strength of impact?
 ** TODO Start measuring all around trunk/log
@@ -717,6 +744,8 @@ https://www.youtube.com/watch?v=dAhwgIk0HU4
 - Also: see docs folder
   - Southern pine: ~ 5000-5900 m/s -- which IIUC is ~ 2 microseconds
     per cm
+** Does the speed of sound vary with loudness?
+- https://physics.stackexchange.com/questions/134064/does-the-speed-at-which-sound-travel-depend-on-the-volume-amplitude-of-the-sou#134092
 
 ** Setting another pin for I2C
 - ESP32 can set any pin for i2c, as long as it's not in use by another function
