@@ -18,3 +18,9 @@ and [the code from that thread](https://github.com/jbeale1/pico/blob/main/QuadHo
 - Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
 - Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
 
+
+## Logging
+
+`make log`
+
+Serial port: 115200
