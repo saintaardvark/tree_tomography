@@ -6,7 +6,7 @@ jl:
 	source $(PATH_TO_JUPYTER_VENV) && jupyter-lab --no-browser
 
 
-log:
-	$(PYTHON) util/logger.py
+log: venv
+	$(VENV)/python util/logger.py
 
 include Makefile.venv
