@@ -12,12 +12,10 @@ and [the code from that thread](https://github.com/jbeale1/pico/blob/main/QuadHo
 
 ## Pico
 
-- Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
-- Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin
-- Pico GPIO 15 (label: 20) -> LED -> switch -> resistor -> +3V
-- Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
-- Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
-
+- GPIO 15: vibration sensor #1
+- GPIO 14: vibration sensor #2
+- GPIO 13: vibration sensor #3
+- GPIO 3: debug pin; if high, go into debug mode
 
 ## Logging
 
