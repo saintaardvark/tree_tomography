@@ -31,14 +31,15 @@ start = ticks_ms()
 
 START_SIG_SIM = False
 SLEEPYTIME = 0.5
-DEBUG = False
+
+DEBUG_PIN = Pin(3, Pin.IN)
 
 
 def debug(msg):
     """
     Simple debugger
     """
-    if DEBUG:
+    if DEBUG_PIN.value() is 1:
         print(f"[DEBUG] {msg}")
 
 
@@ -88,7 +89,7 @@ def maybe_print_headers(headers):
 
     TODO:
     """
-    m = input()
+    m = input("Waiting for you to hit enter")
     print(headers)
 
 
@@ -112,8 +113,7 @@ def main():
     led_1.on()
     led_2.off()
 
-    # DEBUG = True
-    if DEBUG:
+    if DEBUG_PIN.value():
         debug("Debug mode on!")
         formatter = "pretty"
         import sys
@@ -139,17 +139,23 @@ def main():
     # TODO: Don't hardcode header
 
     # Wait to see if we have a request for headers
+    debug("Waiting for you to hit enter before proceeding")
     maybe_print_headers(headers=DEFAULT_HEADERS)
+    debug("About to enter loop!")
     while True:
+        debug(f"About to examine {which_sm}")
         if which_sm == 12:
+            debug("About to activate 1->2...")
             pulsein_12.activate()
             msg = {"1->2": pulsein_12.get()}
             display(msg=msg, formatter=formatter)
         elif which_sm == 13:
+            debug("About to activate 1->3...")
             pulsein_13.activate()
             msg = {"1->3": pulsein_13.get()}
             display(msg=msg, formatter=formatter)
         else:
+            debug("About to activate both...")
             pulsein_12.activate()
             pulsein_13.activate()
             msg = {"1->2": pulsein_12.get(), "1->3": pulsein_13.get()}
