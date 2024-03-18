@@ -9,4 +9,11 @@ jl:
 log: venv
 	$(VENV)/python util/logger.py
 
+
+install:
+	cd micropython && $(MAKE) install
+
+console:
+	screen /dev/ttyACM0 115200
+
 include Makefile.venv
