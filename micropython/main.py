@@ -89,7 +89,12 @@ def maybe_print_headers(headers):
 
     TODO:
     """
-    m = input("Waiting for you to hit enter")
+    try:
+        m = input()
+    except EOFError:
+        # Depending on how logger.py starts up, we may get EOFError.
+        # We don't care, so print out the headers anyway.
+        pass
     print(headers)
 
 
