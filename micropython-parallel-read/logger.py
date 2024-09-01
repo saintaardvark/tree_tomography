@@ -13,15 +13,16 @@ def read_serial_data(port, baudrate):
     data = []
 
     # Regular expression to match the expected format
-    pattern = re.compile(r"^$last-c$=\d{1,5}, rzf=[01]{8}$")
+    pattern = re.compile(r"^interval=\d{1,5}, rzf=[01]{8}$")
 
     try:
         while True:
             line = (
                 ser.readline().decode("utf-8").strip()
             )  # Read a line from the serial port
+            print(line)
             if line and pattern.match(line):  # If the line matches the expected format
-                print(line)
+                print("found one!")
                 data.append(line)
     except KeyboardInterrupt:
         print("Stopping data collection.")

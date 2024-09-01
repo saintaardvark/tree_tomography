@@ -13,6 +13,8 @@ log: venv
 install:
 	cd micropython && $(MAKE) install
 
+install-par:
+	cd micropython-parallel-read/ && $(MAKE) install
 console:
 	screen /dev/ttyACM0 115200
 
