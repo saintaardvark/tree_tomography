@@ -10,3 +10,6 @@ install:
 
 log:
 	source ../.venv/bin/activate && ./logger.py
+
+plog:
+	source ../.venv/bin/activate && ./live_logger.py
