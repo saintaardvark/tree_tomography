@@ -6,7 +6,7 @@ MODEM_SPEED=115200
 
 .PHONY: install
 install:
-	$(RSHELL) rsync --mirror . /pyboard
+	$(RSHELL) rsync --mirror firmware/. /pyboard
 
 log:
 	source ../.venv/bin/activate && ./logger.py
