@@ -37,7 +37,7 @@ def main():
         # the clock is the number of milliseconds elapsed: 2000 Hz / 2
         # = 1000 Hz, or 1 millisecond.
         rzf = "{:08b}".format(r >> RIGHT_SHIFT)
-        interval = last-c
+        interval = last - c
         print(f"{interval=}, {rzf=}")
         # sleep(1.0)
 
