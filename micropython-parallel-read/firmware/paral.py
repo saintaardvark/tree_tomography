@@ -10,9 +10,12 @@ from rp2 import PIO, StateMachine, asm_pio
     out_init=(PIO.OUT_HIGH,) * 8,
     in_shiftdir=PIO.SHIFT_RIGHT,
     autopush=True,
-    push_thresh=32,
+    push_thresh=32,  # Automatically push from ISR to FIFO if there are 32 bits
 )
 def clock():
+    irq(
+        clear, 4
+    )  # Because we start the clock second, we can have it clear the IRQ set by the read routine.
     set(x, 0)  # Set x to 0
     label("WAIT_FOR_P1_HIGH")  # Label for waiting loop
     # Wait for pin1 to be high
@@ -28,12 +31,17 @@ def clock():
     in_shiftdir=PIO.SHIFT_RIGHT,
     sideset_init=PIO.OUT_LOW,
     autopush=True,
-    push_thresh=8,
+    push_thresh=8,  # Automatically push from ISR to FIFO if there are 8 bits
 )
 def paral_read():
     """
     Read in parallel
     """
+    # The intention here is to sync the clocks betw. the two SMs; I'm
+    # not entirely sure this is needed.
+    irq(
+        block, 4
+    )  # Set IRQ 4 & wait for the clock routine to clear it before moving on.
     mov(y, pins)  # Move current state of pins into y
     label("main_loop")  # Beginning of main loop
     mov(x, pins)  # Move current state of pins into x
