@@ -9,8 +9,8 @@ JMP_PIN = Pin(8)
 # We're reading in 8 bits; the TX buffer is 32 bits;
 RIGHT_SHIFT = 24
 
-FREQ = 2000  # Original
-# FREQ = 100_000_000
+# FREQ = 2000  # Original
+FREQ = 100_000_000
 
 
 def main():
