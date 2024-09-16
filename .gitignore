@@ -1,2 +1,3 @@
 wifi_secrets.h
 .secret.sh
+*.csv
