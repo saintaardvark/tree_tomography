@@ -606,6 +606,42 @@
       something like 17.25 cm -- about a 4.5% increase.
 - Able to filter outliers when graphing in logger, but still save them
   in CSV file.
+** [2024-10-25 Fri]
+- First update in a while...
+- Have switched to using pico as a logic analyzer.  This seems to be
+  perfect for what I want.  Getting 10MHz time resolution is possible,
+  and I can capture 8 lines at once -- perfect.
+- Some initial testing shows a *lot* of inconsistency with timing,
+  though.  There appear to be a couple things I'm seieng:
+  - Some sensors do not appear to trigger, although I've done my best
+    to make them all approximately equally sensitive.
+  - Some sensors seem to fire early, leading to cases where the
+    furthest sensor fires before its closer neighbour.
+- One thing that might explain this is different response times in the
+  sensors.  I can think of a couple reasons that might happen:
+  - Individual sensor boards (and in particular the adjustment of
+    sensitivity, which is done through a tiny potentiometer) behave
+    differently -- possibly in response times to a given shock.
+    - A possible example? https://www.mdpi.com/1424-8220/22/24/9571,
+      https://doi.org/10.3390/s22249571
+      #+begin_quote
+      For most of these commercial sensors, the rise time is low (<1 µs) in
+      the so-called face-on configuration, that is, when the blast wave
+      direction is normal to the surface of the sensor. However, in this
+      configuration, the diameter of the sensitive element (rarely
+      communicated by the manufacturer) is not critical. The rise time is
+      much higher (>3 µs) in the so-called side-on configuration, i.e., when
+      the direction of the blast wave is tangential to the surface of the
+      sensor. This is due to the time required by the wave to travel along
+      the surface diameter. Experiments carried out in recent years at
+      CEA-Gramat, for side-on configurations and near field conditions, have
+      shown that the best commercial sensors do not allow the direct
+      measurement of P r - m a x within ±10%.
+      #+end_quote
+    - Possibly orientation is a factor too.
+  - There might be crosstalk between wires
+- Jesus, is response time really in the milliseconds?
+  https://www.eastsensor.com/blog/pressure-sensor-response-time/
 * TODOs
 ** DONE Measure from more than two sensors at a time
 CLOSED: [2024-01-05 Fri 12:44]
@@ -724,8 +760,8 @@ CLOSED: [2023-08-26 Sat 14:21]
 - Pico GPIO 2 (label: 4) -> MPU 6050 interrupt pin
 - Pico GPIO 14 (label: 19) -> MPU 6050 interrupt pin - 0b01
 - Pico GPIO 15 (label: 20) -> piezo digital -> switch out -> resistor -> +3V  - 0b10
-                              |
-                              +-> neg LED lead -> GND
+  |
+  +-> neg LED lead -> GND
 - Pico I2C 0 SDA (label: 26) -> MPU 6050 SDA
 - Pico I2C 0 SCL (label: 27) -> MPU 6050 SCL
 
@@ -764,3 +800,7 @@ https://www.youtube.com/watch?v=dAhwgIk0HU4
 
 ** Other repo
 - https://github.com/zjjdes/treeReconstruction
+
+** Sensor writeups
+- https://www.electroschematics.com/piezo/
+- https://www.digikey.ca/en/articles/fundamentals-of-piezoelectric-shock-and-vibration-sensors
